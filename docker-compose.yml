@@ -1,0 +1,33 @@
+version: '3.4'
+
+x-defaults: &defaults
+  #restart: unless-stopped
+  build: .
+  depends_on:
+    - redis
+  env_file: .env
+  environment:
+    INTRAMURAL_REDIS_HOST: redis
+
+services:
+  redis:
+    restart: unless-stopped
+    image: redis:3.2-alpine
+
+  web:
+    <<: *defaults
+    volumes:
+      - .:/var/app
+    working_dir: /var/app
+    ports:
+      - '9000:9000'
+    command: env
+
+  worker:
+    <<: *defaults
+    command: yarn worker
+
+
+volumes:
+  intramural-postgres:
+    external: true
