@@ -12,8 +12,8 @@
     "build:worker": "cp -R ./src/worker ./build/worker",
     "build:server": "cp -R ./src/server ./build/server",
     "build": "run-s clear build:*",
-    "run:web": "node ./server",
-    "run:worker": "node ./worker"
+    "run:web": "node ./build/server",
+    "run:worker": "node ./build/worker"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
