@@ -16,16 +16,13 @@ services:
 
   web:
     <<: *defaults
-    volumes:
-      - .:/var/app
-    working_dir: /var/app
     ports:
-      - '9000:9000'
-    command: env
+      - '9005:9005'
+    command: run:web
 
   worker:
     <<: *defaults
-    command: yarn worker
+    command: run:worker
 
 
 volumes:

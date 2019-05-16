@@ -11,7 +11,9 @@
     "build:hook": "cp -R ./src/hook ./build/hook",
     "build:worker": "cp -R ./src/worker ./build/worker",
     "build:server": "cp -R ./src/server ./build/server",
-    "build": "run-s clear build:*"
+    "build": "run-s clear build:*",
+    "run:web": "node ./server",
+    "run:worker": "node ./worker"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
