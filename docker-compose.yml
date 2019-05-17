@@ -19,7 +19,8 @@ services:
     ports:
       - '9005:9005'
     command: run:web
-
+    volumes:
+      /var/run/docker.sock:/var/run/docker.sock
   worker:
     <<: *defaults
     command: run:worker
