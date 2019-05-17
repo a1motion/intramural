@@ -15,6 +15,7 @@ app.use(`/g`, require(`../hook`))
 
 app.use(`/api/me`, require(`./routes/me`))
 app.use(`/api/repos`, require(`./routes/repos`))
+app.use(`/badge`, require(`./routes/badge`))
 
 app.listen(9005)
 
