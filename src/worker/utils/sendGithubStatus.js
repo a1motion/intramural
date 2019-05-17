@@ -3,10 +3,6 @@ const db = require(`../../server/db`)
 const getToken = require(`./getToken`)
 const getInstallToken = require(`./getInstallToken`)
 
-const STATUS_MESSSAGES = {
-  success: `Intramural build passed.`,
-}
-
 module.exports = async (repo_id, type, commit, status, jobsMin, jobsMax) => {
   const {
     rows: [repo],
