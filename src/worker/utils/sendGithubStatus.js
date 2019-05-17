@@ -11,18 +11,15 @@ module.exports = async (repo_id, type, commit, status, jobsMin, jobsMax) => {
     [repo_id]
   )
   const token = await getInstallToken(getToken(), repo.install_id)
-  const { body } = await got.post(
-    `/repos/${repo.full_name}/statuses/${commit}`,
-    {
-      json: true,
-      token,
-      body: {
-        state: status,
-        context: `continuous-integration/intramural/${type}`,
-        description: [`error`, `failure`].includes(status)
-          ? `Intramural build failed.`
-          : `(${jobsMin}/${jobsMax})`,
-      },
-    }
-  )
+  await got.post(`/repos/${repo.full_name}/statuses/${commit}`, {
+    json: true,
+    token,
+    body: {
+      state: status,
+      context: `continuous-integration/intramural/${type}`,
+      description: [`error`, `failure`].includes(status)
+        ? `Intramural build failed.`
+        : `(${jobsMin}/${jobsMax})`,
+    },
+  })
 }

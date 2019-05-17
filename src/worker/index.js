@@ -1,7 +1,6 @@
 require(`dotenv`).config()
 const path = require(`path`)
 const Bull = require(`bull`)
-const os = require(`os`)
 
 const builds = new Bull(`builds`, {
   redis: {
