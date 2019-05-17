@@ -55,7 +55,7 @@ module.exports = async (job) => {
     const {
       rows: [b],
     } = await db.query(
-      `insert into intramural_builds values (DEFAULT, $1, $2, $3, $4, $5, null, $6) returning *`,
+      `insert into intramural_builds values (DEFAULT, $1, $2, $3, $4, $5, null, $6, $7) returning *`,
       [
         repo.id,
         build_id,
@@ -63,6 +63,7 @@ module.exports = async (job) => {
         job.data.commit,
         Date.now(),
         job.data.origin,
+        job.data.origin === `pr` ? job.data.pull_request : null,
       ]
     )
     await Promise.all(
