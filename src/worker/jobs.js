@@ -24,8 +24,7 @@ module.exports = async (job) => {
     const script = generateScript(repo, job.data, job.data.meta)
     console.log(`Starting #${job.data.build}.${job.data.job}`)
     const d = execa(
-      `docker`,
-      [`run`, `-i`, `--rm`, `intramural/intramural:latest`, `/bin/bash`],
+      `docker run -i --rm -m 2G --cpus 1 intramural/intramural:latest /bin/bash`,
       {
         input: script,
         shell: true,
