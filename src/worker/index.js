@@ -28,10 +28,10 @@ const jobFinished = new Bull(`job_finished`, {
 
 freshStart.process(1, path.join(__dirname, `fresh_start.js`))
 builds.process(1, path.join(__dirname, `builds.js`))
-jobs.process(1, path.join(__dirname, `jobs.js`))
-jobFinished.process(
+jobs.process(
   process.env.NODE_ENV === `development`
     ? 1
     : require(`physical-cpu-count`) / 2,
-  path.join(__dirname, `job_finished.js`)
+  path.join(__dirname, `jobs.js`)
 )
+jobFinished.process(1, path.join(__dirname, `job_finished.js`))
