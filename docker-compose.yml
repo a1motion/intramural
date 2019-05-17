@@ -1,7 +1,7 @@
 version: '3.4'
 
 x-defaults: &defaults
-  restart: unless-stopped
+  restart: always
   build: .
   depends_on:
     - redis
@@ -11,7 +11,7 @@ x-defaults: &defaults
 
 services:
   redis:
-    restart: unless-stopped
+    restart: always
     image: redis:3.2-alpine
 
   web:
