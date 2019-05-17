@@ -42,6 +42,12 @@ module.exports = async (job) => {
       jobs.filter((j) => j.status === `success`).length,
       jobs.length
     )
+    if (jobs.every((j) => [`failure`, `error`, `success`].includes(j.status))) {
+      await db.query(
+        `update intramural_builds set end_time = $1 where "id" = $2`,
+        [Date.now(), build_info.id]
+      )
+    }
   } catch (e) {
     console.log(e)
   }
