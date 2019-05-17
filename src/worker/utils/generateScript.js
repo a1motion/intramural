@@ -1,5 +1,9 @@
 module.exports = (repo, build, job) => {
   let script = `
+echo "Worker Info:\n"
+echo "Hostname:\t$(hostname)"
+echo "Startup:\t$(cut -d " " -f1 /proc/uptime)"
+echo ""
 
 export CI
 export NODE_ENV
