@@ -9,4 +9,6 @@ COPY src ./src
 
 RUN NODE_ENV=development yarn --frozen-lockfile
 
+RUN yarn build
+
 ENTRYPOINT [ "yarn" ]
