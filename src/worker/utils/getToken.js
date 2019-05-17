@@ -1,8 +1,9 @@
 const fs = require(`fs`)
+const path = require(`path`)
 const jwt = require(`jsonwebtoken`)
 
 const PRIVATE_KEY = fs
-  .readFileSync(__dirname, `../..`, `private-key.pem`)
+  .readFileSync(path.join(__dirname, `../..`, `private-key.pem`))
   .toString()
 
 module.exports = () =>
