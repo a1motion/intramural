@@ -1,5 +1,4 @@
 import { createStore, applyMiddleware } from "redux"
-import LogRocket from "logrocket"
 
 import rootReducer from "./reducers"
 
@@ -12,7 +11,6 @@ export default () => {
       ...[
         window.__REDUX_DEVTOOLS_EXTENSION__ &&
           window.__REDUX_DEVTOOLS_EXTENSION__(),
-        LogRocket.reduxMiddleware(),
       ].filter((a) => a)
     )
   )
