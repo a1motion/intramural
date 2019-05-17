@@ -5,8 +5,8 @@ ENV NODE_ENV production
 WORKDIR /var/app
 
 COPY package.json yarn.lock *.pem ./
-COPY build ./build
+COPY src ./src
 
-RUN yarn --frozen-lockfile
+RUN NODE_ENV=development yarn --frozen-lockfile
 
 ENTRYPOINT [ "yarn" ]
