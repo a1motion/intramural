@@ -1,9 +1,18 @@
 const app = require(`express`).Router()
 const got = require(`gh-got`)
 const db = require(`../db`)
+const LRU = require(`lru-cache`)
+const repoCache = new LRU({
+  max: 1000,
+  maxAge: 15000,
+})
 app.get(`/`, async (req, res) => {
-  if (!req.session.USER) {
+  if (!req.session || !req.session.USER) {
     return res.sendStatus(401)
+  }
+  const cached_repos = repoCache.get(req.session.ACCESS_TOKEN)
+  if (cached_repos) {
+    return res.json(cached_repos)
   }
   const {
     body: { installations },
@@ -33,9 +42,21 @@ app.get(`/`, async (req, res) => {
     )
     .map((repo) => repo.id)
   const { rows: repos } = await db.query(
-    `select * from intramural_repos where id = any($1)`,
+    `SELECT r.*,
+        b.status, b.start_time, b.end_time
+    FROM intramural_repos AS r
+    LEFT JOIN LATERAL
+      (SELECT status, start_time, end_time
+        FROM intramural_builds
+        WHERE repo = r.id
+          AND branch = 'master'
+        ORDER BY id DESC
+        LIMIT 1
+      ) AS b ON TRUE
+    WHERE id = ANY($1);`,
     [r]
   )
+  repoCache.set(req.session.ACCESS_TOKEN, repos)
   return res.json(repos)
 })
 

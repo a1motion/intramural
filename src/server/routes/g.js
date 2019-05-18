@@ -23,17 +23,33 @@ const getAccessTokenFromCode = async (code, state) => {
 }
 
 const getUser = async (accessToken) => {
-  const { body } = await got.get(`https://api.github.com/user`, {
-    json: true,
+  const data = await got.post(`https://api.github.com/graphql`, {
+    responseType: `json`,
     headers: {
       Authorization: `token ${accessToken}`,
     },
+    body: JSON.stringify({
+      query: `{
+          viewer {
+            avatarUrl
+            email
+            id
+            login
+            name
+          }
+        }`,
+    }),
   })
+  let { body } = data
+  body = JSON.parse(body)
+  const {
+    data: { viewer },
+  } = body
   return {
-    name: body.name || body.login,
-    email: body.email,
-    image: body.avatar_url,
-    id: body.id,
+    name: viewer.name || viewer.login,
+    email: viewer.email,
+    image: viewer.avatarUrl,
+    id: viewer.id,
   }
 }
 
@@ -69,7 +85,18 @@ app.get(`/`, async (req, res) => {
   req.session.ACCESS_TOKEN = ACCESS_TOKEN
   const USER = await getUser(ACCESS_TOKEN)
   req.session.USER = USER
-  return res.redirect(`/`)
+  return res.redirect(
+    process.env.NODE_ENV === `development` ? `http://localhost:1234` : `/`
+  )
 })
 
+app.get(`/logout`, (req, res) => {
+  delete req.session.ACCESS_TOKEN
+  delete req.session.USER
+  return req.session.save(() =>
+    res.redirect(
+      process.env.NODE_ENV === `development` ? `http://localhost:1234` : `/`
+    )
+  )
+})
 module.exports = app
