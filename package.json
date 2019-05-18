@@ -12,7 +12,7 @@
     "build:worker": "cp -R ./src/worker ./build/worker",
     "build:server": "cp -R ./src/server ./build/server",
     "build": "run-s clear build:*",
-    "deploy": "node scripts/build.js",
+    "deploy": "node -r dotenv/config scripts/build.js",
     "run:web": "node ./build/server",
     "run:worker": "node ./build/worker"
   },
