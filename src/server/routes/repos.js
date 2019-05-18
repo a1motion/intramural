@@ -50,7 +50,7 @@ app.get(`/`, async (req, res) => {
         FROM intramural_builds
         WHERE repo = r.id
           AND branch = 'master'
-        ORDER BY id DESC
+        ORDER BY b.id DESC
         LIMIT 1
       ) AS b ON TRUE
     WHERE id = ANY($1);`,

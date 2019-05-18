@@ -54,10 +54,10 @@ function getTimeSince(date) {
     return `${Math.round(days)} day${Math.round(days) > 1 ? `s` : ``} ago`
   }
   if (hours >= 1) {
-    return `${Math.round(hours)} day${Math.round(hours) > 1 ? `s` : ``} ago`
+    return `${Math.round(hours)} hour${Math.round(hours) > 1 ? `s` : ``} ago`
   }
   if (minutes >= 1) {
-    return `${Math.round(minutes)} day${Math.round(minutes) > 1 ? `s` : ``} ago`
+    return `${Math.round(minutes)} min${Math.round(minutes) > 1 ? `s` : ``} ago`
   }
   return ``
 }
