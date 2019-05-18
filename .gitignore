@@ -4,3 +4,4 @@ dump.rdb
 .cache
 build/
 *.pem
+yarn-error.log
