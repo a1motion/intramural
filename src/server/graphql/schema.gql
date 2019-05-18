@@ -1,0 +1,28 @@
+interface Node {
+  id: ID!
+}
+scalar URI
+
+type User implements Node {
+  id: ID!
+  name: String!
+  email: String
+  avatarUrl: URI!
+}
+type Actor implements Node {
+  id: ID!
+  name: String
+}
+type Repository implements Node {
+  id: ID!
+  fullName: String!
+  name: String!
+  private: Boolean!
+  owner: Actor!
+}
+
+type Query {
+  viewer: User
+  repository(fullName: String!): Repository
+  repositories: [Repository!]!
+}

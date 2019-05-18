@@ -1,6 +1,7 @@
 require(`dotenv`).config()
 
 const express = require(`express`)
+const graphqlHTTP = require(`express-graphql`)
 const logger = require(`morgan`)
 const path = require(`path`)
 const app = express()
@@ -21,6 +22,13 @@ app.use(`/api/repos`, require(`./routes/repos`))
 app.use(`/api/builds`, require(`./routes/builds`))
 app.use(`/badge`, require(`./routes/badge`))
 
+app.use(
+  `/graphql`,
+  graphqlHTTP({
+    ...require(`./graphql/schema`),
+    graphiql: true,
+  })
+)
 if (process.env.NODE_ENV === `development`) {
   app.use(express.static(path.join(__dirname, `../../build/client`)))
 }
