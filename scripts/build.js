@@ -50,9 +50,9 @@ function contentType(src, ext) {
 }
 
 const deploy = async () => {
-  const files = await getFilesInDir(`./build`)
+  const files = await getFilesInDir(`./build/client`)
   await files.map(async (file) => {
-    let Key = path.relative(`./build`, file)
+    let Key = path.relative(`./build/client`, file)
     const Body = await readFile(file)
     if (Key.endsWith(`.map`)) {
       return false
