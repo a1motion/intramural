@@ -44,8 +44,8 @@ module.exports = async (job) => {
     )
     if (jobs.every((j) => [`failure`, `error`, `success`].includes(j.status))) {
       await db.query(
-        `update intramural_builds set end_time = $1 where "id" = $2`,
-        [Date.now(), build_info.id]
+        `update intramural_builds set end_time = $1, status = $2 where "id" = $3`,
+        [Date.now(), status, build_info.id]
       )
     }
   } catch (e) {

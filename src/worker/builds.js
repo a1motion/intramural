@@ -64,6 +64,7 @@ module.exports = async (job) => {
         Date.now(),
         job.data.origin,
         job.data.origin === `pr` ? job.data.pull_request : null,
+        `pending`,
       ]
     )
     await Promise.all(
