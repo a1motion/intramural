@@ -58,7 +58,7 @@ const deploy = async () => {
       return false
     }
     if (Key.endsWith(`.css`)) {
-      Body = Body.replace(/\/\*[^*]*\*+([^/*][^*]*\*+)*\//, ``)
+      Body = Body.toString().replace(/\/\*[^*]*\*+([^/*][^*]*\*+)*\//, ``)
     }
     const CacheControl =
       Key === `index.html`
