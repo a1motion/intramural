@@ -21,6 +21,7 @@ WORKDIR /var/app
 
 COPY package.json yarn.lock *.pem babel.config.js ./
 COPY src ./src
+COPY scripts ./scripts
 
 RUN NODE_ENV=development yarn --frozen-lockfile
 
