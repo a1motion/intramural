@@ -1,7 +1,7 @@
 const db = require(`../../../db`)
 const getREposForUser = require(`../getReposForUser`)
 const addBuildProperties = require(`../build/common`)
-console.log(addBuildProperties)
+
 module.exports = (repo, req) => {
   repo.builds = async () => {
     if (repo.private === true) {
