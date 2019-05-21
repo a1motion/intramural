@@ -24,7 +24,7 @@ module.exports = async (
     token,
     body: {
       state: status,
-      context: `continuous-integration/intramural/${type}`,
+      context: `ci/intramural/${type}`,
       description: [`error`, `failure`].includes(status)
         ? `Intramural build failed.`
         : `(${jobsMin}/${jobsMax})`,
