@@ -58,15 +58,6 @@ module.exports = async (job) => {
     } else {
       build_id = Number.parseInt(old_builds[0].num, 10) + 1
     }
-    await sendGithubStatus(
-      build_id,
-      repo.id,
-      job.data.origin,
-      job.data.commit,
-      `pending`,
-      0,
-      config.jobs.length
-    )
     const {
       rows: [b],
     } = await db.query(
@@ -81,6 +72,15 @@ module.exports = async (job) => {
         job.data.origin === `pr` ? job.data.pull_request : null,
         `pending`,
       ]
+    )
+    await sendGithubStatus(
+      b.id,
+      repo.id,
+      job.data.origin,
+      job.data.commit,
+      `pending`,
+      0,
+      config.jobs.length
     )
     await Promise.all(
       config.jobs.map(async (j, i) => {
