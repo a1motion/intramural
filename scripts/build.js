@@ -53,9 +53,12 @@ const deploy = async () => {
   const files = await getFilesInDir(`./build/client`)
   await files.map(async (file) => {
     let Key = path.relative(`./build/client`, file)
-    const Body = await readFile(file)
+    let Body = await readFile(file)
     if (Key.endsWith(`.map`)) {
       return false
+    }
+    if (Key.endsWith(`.css`)) {
+      Body = Body.replace(/\/\*[^*]*\*+([^/*][^*]*\*+)*\//, ``)
     }
     const CacheControl =
       Key === `index.html`
