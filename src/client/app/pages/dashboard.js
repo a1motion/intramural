@@ -8,11 +8,12 @@ import PlaceholderLine from "semantic-ui-react/dist/es/elements/Placeholder/Plac
 
 import { Link } from "react-router-dom"
 import Container from "../components/container"
-import { useKy } from "../utils/useKy"
 import { css } from "linaria"
 
 import "semantic-ui-css/components/segment.min.css"
 import "semantic-ui-css/components/placeholder.min.css"
+import Query from "../utils/Query"
+import { getColorFromStatus } from "../utils/getColorFromStatus"
 
 const BuildInfo = ({ repo }) => <div />
 
@@ -23,54 +24,52 @@ const Repo = css`
     background-color: #f0f0f0;
   }
 `
-export default () => {
-  const [repos, loading] = useKy(
-    `${
-      process.env.NODE_ENV === `development` ? `//localhost:9005` : ``
-    }/api/repos`,
-    {
-      credentials: `include`,
+
+const GET_REPOS = `{
+  repositories {
+    id
+    fullName
+    lastBuild {
+      status
     }
-  )
-  if (loading) {
-    return (
-      <Container>
-        <SegmentGroup>
-          {new Array(8).fill(0).map((_, i) => (
-            <Segment key={i}>
-              <Placeholder>
-                <PlaceholderParagraph>
-                  <PlaceholderLine />
-                </PlaceholderParagraph>
-              </Placeholder>
-            </Segment>
-          ))}
-        </SegmentGroup>
-      </Container>
-    )
   }
+}
+`
+
+export default () => {
   return (
     <Container>
       <SegmentGroup stacked>
-        {repos.map((repo) => (
-          <Segment
-            padded
-            className={Repo}
-            key={repo.id}
-            as={Link}
-            to={`/${repo.full_name}`}
-            color={
-              repo.status === `success`
-                ? `green`
-                : repo.status === `pending`
-                ? `grey`
-                : repo.status === null
-                ? `blue`
-                : `red`
-            }>
-            <span>{repo.full_name}</span>
-          </Segment>
-        ))}
+        <Query query={GET_REPOS}>
+          {({ loading, error, data }) => {
+            if (error) {
+              return <div />
+            }
+            if (loading || !data) {
+              return new Array(8).fill(0).map((_, i) => (
+                <Segment key={i}>
+                  <Placeholder>
+                    <PlaceholderParagraph>
+                      <PlaceholderLine />
+                    </PlaceholderParagraph>
+                  </Placeholder>
+                </Segment>
+              ))
+            }
+
+            return data.repositories.map((repo) => (
+              <Segment
+                padded
+                className={Repo}
+                key={repo.id}
+                as={Link}
+                to={`/${repo.fullName}`}
+                color={getColorFromStatus(repo.lastBuild)}>
+                <span>{repo.fullName}</span>
+              </Segment>
+            ))
+          }}
+        </Query>
       </SegmentGroup>
     </Container>
   )

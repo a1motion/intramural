@@ -11,7 +11,10 @@ const jobFinished = new Bull(`job_finished`, {
   },
 })
 
-const s3 = new S3()
+const s3 = new S3({
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+})
 
 function uploadLogs(build, job, logs) {
   return new Promise((resolve, reject) => {

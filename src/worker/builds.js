@@ -1,5 +1,6 @@
 const got = require(`gh-got`)
 const Bull = require(`bull`)
+const debug = require(`debug`)(`intramural:worker:builds`)
 const db = require(`../server/db`)
 const getToken = require(`./utils/getToken`)
 const getInstallToken = require(`./utils/getInstallToken`)
@@ -30,21 +31,26 @@ module.exports = async (job) => {
       }
     )
     if (body.type !== `file`) {
+      debug(
+        `${
+          repo.full_name
+        } does not have a .intramural.yml config file, skipping.`
+      )
       return
     }
     config = Buffer.from(body.content, body.encoding).toString()
     config = parseConfig(config)
+    if (!config) {
+      debug(
+        `${
+          repo.full_name
+        } does not have a valid .intramural.yml config file, skipping.`
+      )
+      return
+    }
     const { rows: old_builds } = await db.query(
       `select num from intramural_builds where repo = $1 order by num desc limit 1`,
       [repo.id]
-    )
-    await sendGithubStatus(
-      repo.id,
-      job.data.origin,
-      job.data.commit,
-      `pending`,
-      0,
-      config.jobs.length
     )
     let build_id
     if (old_builds.length === 0) {
@@ -52,6 +58,15 @@ module.exports = async (job) => {
     } else {
       build_id = Number.parseInt(old_builds[0].num, 10) + 1
     }
+    await sendGithubStatus(
+      build_id,
+      repo.id,
+      job.data.origin,
+      job.data.commit,
+      `pending`,
+      0,
+      config.jobs.length
+    )
     const {
       rows: [b],
     } = await db.query(
@@ -73,9 +88,9 @@ module.exports = async (job) => {
           rows: [t],
         } = await db.query(
           `insert into intramural_jobs values (DEFAULT, $1, $2, $3, $4, $5, $6) returning * `,
-          [repo.id, build_id, i + 1, `Ubuntu 16.10`, ``, `waiting`]
+          [repo.id, build_id, i + 1, `Ubuntu 18.10`, ``, `waiting`]
         )
-        console.log(`Created #${build_id}.${i + 1}`)
+        debug(`Created #${build_id}.${i + 1}`)
         pJobs.add({
           ...job.data,
           id: t.id,

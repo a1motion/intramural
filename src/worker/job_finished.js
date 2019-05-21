@@ -35,6 +35,7 @@ module.exports = async (job) => {
       status = `pending`
     }
     await sendGithubStatus(
+      build_info.num,
       repo.id,
       build_info.origin,
       build_info.commit,

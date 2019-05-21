@@ -24,5 +24,7 @@ module.exports = (doc) => {
     }
     return c
   }
+  if (config.version === 2) {
+  }
   return undefined
 }

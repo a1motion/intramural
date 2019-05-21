@@ -5,11 +5,14 @@ import { connect } from "react-redux"
 import { Header } from "./components/header"
 import { USER_PENDING, checkLogin } from "./actions/user"
 
+import "./index.css"
 import "semantic-ui-css/components/reset.min.css"
 import "semantic-ui-css/components/site.min.css"
 
 const Dashboard = lazy(() => import(`./pages/dashboard`))
 const Repo = lazy(() => import(`./pages/repo`))
+const Build = lazy(() => import(`./pages/build`))
+const Job = lazy(() => import(`./pages/job`))
 
 function mapStateToProps(state) {
   const { user } = state
@@ -37,6 +40,12 @@ export default connect(mapStateToProps)(({ dispatch, user }) => {
       <Suspense fallback={<div />}>
         {user.status !== USER_PENDING && (
           <Switch>
+            <Route
+              path={`/:owner/:repo/builds/:build`}
+              exact
+              component={Build}
+            />
+            <Route path={`/:owner/:repo/jobs/:job`} exact component={Job} />
             <Route path={`/:owner/:repo`} exact component={Repo} />
             <Route path={`/`} exact component={Dashboard} />
             <Route render={() => <Redirect to={`/`} />} />

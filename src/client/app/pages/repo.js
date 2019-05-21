@@ -2,22 +2,22 @@ import React from "react"
 
 import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment"
 import SegmentGroup from "semantic-ui-react/dist/es/elements/Segment/SegmentGroup"
-import Placeholder from "semantic-ui-react/dist/es/elements/Placeholder/Placeholder"
-import PlaceholderParagraph from "semantic-ui-react/dist/es/elements/Placeholder/PlaceholderParagraph"
-import PlaceholderLine from "semantic-ui-react/dist/es/elements/Placeholder/PlaceholderLine"
-import Header from "semantic-ui-react/dist/es/elements/Header/Header"
-import HeaderContent from "semantic-ui-react/dist/es/elements/Header/HeaderContent"
 import Icon from "semantic-ui-react/dist/es/elements/Icon/Icon"
+import Breadcrumb from "semantic-ui-react/dist/es/collections/Breadcrumb/Breadcrumb"
+import BreadcrumbDivider from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbDivider"
+import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbSection"
 
 import { Redirect, Link } from "react-router-dom"
 import Container from "../components/container"
-import { useKy } from "../utils/useKy"
 import { css } from "linaria"
 
 import "semantic-ui-css/components/segment.min.css"
-import "semantic-ui-css/components/placeholder.min.css"
 import "semantic-ui-css/components/icon.min.css"
-import "semantic-ui-css/components/header.min.css"
+import "semantic-ui-css/components/breadcrumb.min.css"
+
+import Query from "../utils/Query"
+import { getColorFromStatus } from "../utils/getColorFromStatus"
+import LoadingStack from "../components/LoadingStack"
 
 const FlexBox = css`
   display: flex;
@@ -76,15 +76,7 @@ const Builds = ({ loading, builds, owner, repo }) => {
   if (loading) {
     return (
       <SegmentGroup>
-        {new Array(8).fill(0).map((_, i) => (
-          <Segment key={i}>
-            <Placeholder>
-              <PlaceholderParagraph>
-                <PlaceholderLine />
-              </PlaceholderParagraph>
-            </Placeholder>
-          </Segment>
-        ))}
+        <LoadingStack />
       </SegmentGroup>
     )
   }
@@ -101,39 +93,29 @@ const Builds = ({ loading, builds, owner, repo }) => {
           return Number(b.id) - Number(a.id)
         })
         .map((build) => (
-          <Segment
-            key={build.id}
-            color={
-              build.status === `success`
-                ? `green`
-                : build.status === `pending`
-                ? `grey`
-                : build.status === null
-                ? `blue`
-                : `red`
-            }>
+          <Segment key={build.id} color={getColorFromStatus(build)}>
             <div className={FlexBox}>
               <div className={Section}>
                 <div className={Item}>
-                  <Link to={`/${owner}/${repo}/builds/${build.num}`}>
+                  <Link to={`/${owner}/${repo}/builds/${build.id}`}>
                     {build.branch} (#{build.num})
                   </Link>
                 </div>
                 <div className={Item}>
-                  {build.total_builds} build
-                  {build.total_builds > 1 ? `s` : ``}
+                  {build.totalBuilds} build
+                  {build.totalBuilds > 1 ? `s` : ``}
                 </div>
               </div>
               <div className={Section}>
                 <div className={Item}>
                   <Icon name={`calendar outline`} color={`grey`} />
-                  {getTimeSince(build.start_time)}
+                  {getTimeSince(build.startTime)}
                 </div>
                 <div className={Item}>
                   <Icon name={`clock outline`} color={`grey`} />
-                  {build.end_time === null
+                  {build.endTime === null
                     ? `?`
-                    : getBuildTime(build.end_time - build.start_time)}
+                    : getBuildTime(build.endTime - build.startTime)}
                 </div>
               </div>
             </div>
@@ -143,32 +125,49 @@ const Builds = ({ loading, builds, owner, repo }) => {
   )
 }
 
+const GET_BUILDS = `query($fullName: String!) {
+  repository(fullName: $fullName) {
+    builds {
+      id
+      num
+      branch
+      totalBuilds
+      endTime
+      startTime
+      status
+      branch
+    }
+  }
+}`
+
 export default ({
   match: {
     params: { owner, repo },
   },
 }) => {
-  const [builds, loading] = useKy(
-    `${
-      process.env.NODE_ENV === `development` ? `//localhost:9005` : ``
-    }/api/builds/${owner}/${repo}`,
-    {
-      credentials: `include`,
-    }
-  )
   return (
     <Container>
-      <Header>
-        <HeaderContent>
-          <span className={CenterIcon}>
-            <a href={`https://github.com/${owner}/${repo}`}>
-              {owner}/{repo}
-            </a>
-            <Icon name={`external`} size={`tiny`} className={HeaderIcon} />
-          </span>
-        </HeaderContent>
-      </Header>
-      <Builds builds={builds} loading={loading} owner={owner} repo={repo} />
+      <Breadcrumb>
+        <BreadcrumbSection as={Link} to={`/${owner}`}>
+          {owner}
+        </BreadcrumbSection>
+        <BreadcrumbDivider icon={`right chevron`} />
+        <BreadcrumbSection as={Link} to={`/${owner}/${repo}`}>
+          {repo}
+        </BreadcrumbSection>
+      </Breadcrumb>
+      <Query query={GET_BUILDS} variables={{ fullName: `${owner}/${repo}` }}>
+        {({ loading, error, data }) => {
+          return (
+            <Builds
+              builds={loading ? [] : data.repository.builds}
+              loading={loading}
+              owner={owner}
+              repo={repo}
+            />
+          )
+        }}
+      </Query>
     </Container>
   )
 }

@@ -3,7 +3,15 @@ const db = require(`../../server/db`)
 const getToken = require(`./getToken`)
 const getInstallToken = require(`./getInstallToken`)
 
-module.exports = async (repo_id, type, commit, status, jobsMin, jobsMax) => {
+module.exports = async (
+  build_id,
+  repo_id,
+  type,
+  commit,
+  status,
+  jobsMin,
+  jobsMax
+) => {
   const {
     rows: [repo],
   } = await db.query(
@@ -20,6 +28,9 @@ module.exports = async (repo_id, type, commit, status, jobsMin, jobsMax) => {
       description: [`error`, `failure`].includes(status)
         ? `Intramural build failed.`
         : `(${jobsMin}/${jobsMax})`,
+      target_url: `https://intramural.a1motion.com/${
+        repo.full_name
+      }/builds/${build_id}`,
     },
   })
 }

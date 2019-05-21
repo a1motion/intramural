@@ -2,7 +2,14 @@ interface Node {
   id: ID!
 }
 scalar URI
-
+scalar Time
+enum Status {
+  WAITING
+  PENDING
+  SUCCESS
+  ERROR
+  FAILURE
+}
 type User implements Node {
   id: ID!
   name: String!
@@ -13,16 +20,42 @@ type Actor implements Node {
   id: ID!
   name: String
 }
+type Build implements Node {
+  id: ID!
+  num: Int!
+  status: Status!
+  branch: String!
+  commit: String!
+  totalBuilds: Int!
+  endTime: Time
+  startTime: Time
+  jobs: [Job!]!
+}
+type Job implements Node {
+  id: ID!
+  num: Int!
+  tag: String!
+  os: String!
+  status: Status!
+  startTime: Time
+  endTime: Time
+  log: String
+  build: Build!
+}
 type Repository implements Node {
   id: ID!
   fullName: String!
   name: String!
   private: Boolean!
   owner: Actor!
+  lastBuild(branch: String = "master"): Build
+  builds: [Build!]!
 }
 
 type Query {
   viewer: User
   repository(fullName: String!): Repository
   repositories: [Repository!]!
+  build(id: ID!): Build
+  job(id: ID!): Job
 }
