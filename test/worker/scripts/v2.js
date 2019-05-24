@@ -33,5 +33,6 @@ test(`simple`, async (t) => {
     },
     steps: [`yarn test`],
   })
+  console.log(s)
   t.is(s, await getFixtures(`simple.v2.script.txt`))
 })

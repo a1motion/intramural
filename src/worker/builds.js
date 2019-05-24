@@ -73,6 +73,7 @@ module.exports = async (job) => {
         `pending`,
       ]
     )
+    debug(`Starting build #${build_id} (${b.id}) for ${repo.full_name}`)
     await sendGithubStatus(
       b.id,
       repo.id,

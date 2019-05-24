@@ -69,17 +69,17 @@ module.exports = async (repo, build, job) => {
     echo "Startup:\t$(echo $(($(date +%s%3N) - ${Date.now()})))ms"
     echo
     `)
-
+    script += `echo\n`
     script += generateDeps(job.deps)
-
+    script += `echo\n`
     script += align(`
     export CI=true
     export NODE_ENV=test
     export PULL_REQUEST=${build.pull_request || `false`}
     `)
-
+    script += `echo\n`
     script += generateEnv(job.env)
-
+    script += `echo\n`
     script += align(`
     [[ -s $NVM_DIR/nvm.sh ]] && . $NVM_DIR/nvm.sh
     echo "$ git clone --depth=50 --branch=${
@@ -93,11 +93,11 @@ module.exports = async (repo, build, job) => {
     echo "$ git checkout -qf ${build.commit}"
     git checkout -qf ${build.commit}
     `)
-
+    script += `echo\n`
     script += generateUses(job.uses)
-
+    script += `echo\n`
     script += generateSteps(job.steps)
-
+    script += `echo\n`
     return align(script)
   }
   return ``
@@ -130,7 +130,10 @@ function generateDeps(dep) {
 }
 function generateEnv(env) {
   return Object.entries(env)
-    .map(([name, value]) => `export ${name}=${value}`)
+    .map(
+      ([name, value]) =>
+        `echo "export ${name}=${value}"\nexport ${name}=${value}`
+    )
     .join(`\n`)
 }
 function generateSteps(steps) {
@@ -138,10 +141,9 @@ function generateSteps(steps) {
     steps
       .map(
         (step) => `
-    echo "$ ${step}"
-    ${step}
-    if [ $? -ne 0 ]; then exit $?; fi
-  `
+      echo "$ ${step}"
+      ${step} || exit $?
+      `
       )
       .join(`\n`)
   )
