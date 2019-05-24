@@ -1,9 +1,8 @@
-const getToken = require(`./getToken`)
-const getInstallToken = require(`./getInstallToken`)
-
 module.exports = async (repo, build, job) => {
   let ACCESS_TOKEN = ``
   if (repo.private) {
+    const getToken = require(`./getToken`)
+    const getInstallToken = require(`./getInstallToken`)
     ACCESS_TOKEN = await getInstallToken(getToken(), repo.install_id)
   }
   if (job.version === 1) {
