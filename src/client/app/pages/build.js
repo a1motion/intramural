@@ -62,6 +62,7 @@ const GET_BUILD_QUERY = `query ($buildId: ID!){
       startTime
       endTime
       status
+      tag
     }
   }
 }`
@@ -122,6 +123,7 @@ export default ({
                 <span className={FlexGrow}>
                   #{build.num}.{job.num}
                 </span>
+                <span className={FlexGrow}>{job.tag}</span>
                 <span className={FlexShrink}>
                   <Icon name={`clock outline`} color={`grey`} />
                   {job.startTime === null ? (
