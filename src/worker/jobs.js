@@ -45,7 +45,7 @@ module.exports = async (job) => {
     )
     let tag = ``
     if (job.data.meta.uses && job.data.meta.uses.node) {
-      tag += `Node ${job.uses.node}`
+      tag += `Node ${job.data.meta.uses.node}`
     }
     await db.query(
       `update intramural_jobs set status = $1, start_time = $2, tag = $3 where "id" = $4`,
