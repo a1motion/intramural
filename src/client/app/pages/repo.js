@@ -22,10 +22,6 @@ import LoadingStack from "../components/LoadingStack"
 const FlexBox = css`
   display: flex;
 `
-const CenterIcon = css`
-  display: flex;
-  align-items: center;
-`
 const Section = css`
   width: 25%;
 `
@@ -33,14 +29,7 @@ const Item = css`
   margin: 8px 0;
   font-size: 1.15rem;
 `
-const HeaderIcon = css`
-  .${CenterIcon}:hover & {
-    opacity: 1 !important;
-  }
-  opacity: 0 !important;
-  margin-left: 0.5em !important;
-  transition: opacity 0.2s;
-`
+
 function getTimeSince(date) {
   const seconds = Math.floor((Date.now() - date) / 1000)
   const minutes = seconds / 60
@@ -174,6 +163,9 @@ export default ({
       </Breadcrumb>
       <Query query={GET_BUILDS} variables={{ fullName: `${owner}/${repo}` }}>
         {({ loading, error, data }) => {
+          if (error) {
+            return <div />
+          }
           return (
             <Builds
               builds={loading ? [] : data.repository.builds}

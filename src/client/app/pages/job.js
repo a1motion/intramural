@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 
 import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment"
-import Loader from "semantic-ui-react/dist/es/elements/Loader/Loader"
 import Breadcrumb from "semantic-ui-react/dist/es/collections/Breadcrumb/Breadcrumb"
 import BreadcrumbDivider from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbDivider"
 import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbSection"
@@ -17,7 +16,6 @@ import Query from "../utils/Query"
 import "semantic-ui-css/components/segment.min.css"
 import "semantic-ui-css/components/breadcrumb.min.css"
 import "semantic-ui-css/components/icon.min.css"
-import "semantic-ui-css/components/loader.min.css"
 
 const GET_JOB_QUERY = `query ($jobId: ID!){
   job(id: $jobId) {
@@ -97,6 +95,9 @@ export default ({
       </Breadcrumb>
       <Query query={GET_JOB_QUERY} variables={{ jobId: job }}>
         {({ loading, data, error }) => {
+          if (error) {
+            return <div />
+          }
           if (loading) {
             return <LoadingStack />
           }

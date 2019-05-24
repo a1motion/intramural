@@ -8,7 +8,6 @@ import PlaceholderLine from "semantic-ui-react/dist/es/elements/Placeholder/Plac
 import "semantic-ui-css/components/segment.min.css"
 import "semantic-ui-css/components/placeholder.min.css"
 
-const sizes = [`full`, `very long`, `long`, `medium`, `short`, `very short`]
 export default () =>
   new Array(8).fill(0).map((_, i) => (
     <Segment key={i}>

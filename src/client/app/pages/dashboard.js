@@ -15,8 +15,6 @@ import "semantic-ui-css/components/placeholder.min.css"
 import Query from "../utils/Query"
 import { getColorFromStatus } from "../utils/getColorFromStatus"
 
-const BuildInfo = ({ repo }) => <div />
-
 const Repo = css`
   cursor: pointer;
   display: block;

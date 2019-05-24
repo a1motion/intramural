@@ -46,5 +46,5 @@ if (process.env.NODE_ENV === `development`) {
     logger: console,
   })
 
-  const events = smee.start()
+  smee.start()
 }

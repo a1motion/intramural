@@ -108,6 +108,9 @@ export default ({
       <SegmentGroup>
         <Query query={GET_BUILD_QUERY} variables={{ buildId: build }}>
           {({ loading, data, error }) => {
+            if (error) {
+              return <div />
+            }
             if (loading) {
               return <LoadingStack />
             }
