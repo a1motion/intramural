@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 
 import { Link } from "react-router-dom"
 import { css } from "linaria"
@@ -66,6 +66,17 @@ const GET_BUILD_QUERY = `query ($buildId: ID!){
   }
 }`
 
+const RealTime = ({ startTime }) => {
+  const [current, setCurrent] = useState(getBuildTime(Date.now() - startTime))
+  useEffect(() => {
+    const s = setInterval(() => {
+      setCurrent(getBuildTime(Date.now() - startTime))
+    }, 1000)
+    return () => clearInterval(s)
+  }, [startTime])
+  return current
+}
+
 export default ({
   match: {
     params: { build, owner, repo },
@@ -113,9 +124,13 @@ export default ({
                 </span>
                 <span className={FlexShrink}>
                   <Icon name={`clock outline`} color={`grey`} />
-                  {job.startTime === null
-                    ? `?`
-                    : getBuildTime((job.endTime || Date.now()) - job.startTime)}
+                  {job.startTime === null ? (
+                    `Waiting`
+                  ) : job.endTime === null ? (
+                    <RealTime startTime={job.startTime} />
+                  ) : (
+                    getBuildTime(job.endTime - job.startTime)
+                  )}
                 </span>
               </Segment>
             ))

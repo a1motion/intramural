@@ -6,6 +6,9 @@ export const getColorFromStatus = (build) => {
     return `green`
   }
   if (build.status === `PENDING`) {
+    return `yellow`
+  }
+  if (build.status === `WAITING`) {
     return `grey`
   }
   return `red`

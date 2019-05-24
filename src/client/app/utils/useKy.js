@@ -5,7 +5,7 @@ export function useKy(url, options) {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-    ky(url, options)
+    ky(url, { credentials: `include`, mode: `cors`, ...options })
       .json()
       .then((data) => {
         setData(data)

@@ -47,7 +47,7 @@ module.exports = async (job) => {
       `update intramural_jobs set status = $1, start_time = $2 where "id" = $3`,
       [`pending`, Date.now(), job.data.id]
     )
-    const script = generateScript(repo, job.data, job.data.meta)
+    const script = await generateScript(repo, job.data, job.data.meta)
     debug(`Starting #${job.data.build}.${job.data.job}`)
     const d = execa(
       `docker run -i --rm -m 2G --cpus 1 intramural/intramural:latest /bin/bash`,

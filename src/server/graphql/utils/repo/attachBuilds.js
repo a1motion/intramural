@@ -1,13 +1,13 @@
 const db = require(`../../../db`)
-const getREposForUser = require(`../getReposForUser`)
+const getReposForUser = require(`../getReposForUser`)
 const addBuildProperties = require(`../build/common`)
 
 module.exports = (repo, req) => {
   repo.builds = async () => {
     if (repo.private === true) {
       if (
-        !(await getREposForUser(req.session.ACCESS_TOKEN, repo.id)).includes(
-          repo.id
+        !(await getReposForUser(req.session.ACCESS_TOKEN)).includes(
+          Number(repo.id)
         )
       ) {
         throw new Error(`No`)

@@ -1,5 +1,6 @@
 const got = require(`gh-got`)
 const Bull = require(`bull`)
+const debug = require(`debug`)(`intramural:worker:fresh_start`)
 const db = require(`../server/db`)
 const getToken = require(`./utils/getToken`)
 const getInstallToken = require(`./utils/getInstallToken`)
@@ -23,6 +24,11 @@ module.exports = async (job) => {
       token,
       json: true,
     })
+    debug(
+      `Starting fresh build for repo: ${
+        repo.full_name
+      }, with the following branches: ${branches.map((a) => a.name)}`
+    )
     branches.forEach((branch) => {
       builds.add({
         repo: repo.id,

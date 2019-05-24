@@ -25,6 +25,11 @@ module.exports = (app) => {
   app.on([`installation.created`], async (context) => {
     const { installation, repositories } = context.payload
     const { account } = installation
+    debug(
+      `New Install with the following repos: ${repositories.map(
+        (a) => a.full_name
+      )}`
+    )
     await createOrUpdateAccount(account, installation)
     await createOrUpdateRepos(account, repositories)
     repositories.forEach((repo) => {
@@ -36,6 +41,11 @@ module.exports = (app) => {
   app.on([`installation_repositories.added`], async (context) => {
     const { installation, repositories_added } = context.payload
     const { account } = installation
+    debug(
+      `Repos added to existing install with the following repos: ${repositories_added.map(
+        (a) => a.full_name
+      )}`
+    )
     await createOrUpdateAccount(account, installation)
     await createOrUpdateRepos(account, repositories_added)
     repositories_added.forEach((repo) => {

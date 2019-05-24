@@ -7,6 +7,7 @@ import BreadcrumbDivider from "semantic-ui-react/dist/es/collections/Breadcrumb/
 import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbSection"
 
 import { Link } from "react-router-dom"
+import { css } from "linaria"
 
 import Container from "../components/container"
 import LoadingStack from "../components/LoadingStack"
@@ -31,6 +32,35 @@ const GET_JOB_QUERY = `query ($jobId: ID!){
   }
 }`
 
+const PendingLogs = css`
+  min-height: 400px;
+`
+
+const LogsWrapper = css`
+  counter-reset: line;
+`
+const LogsLine = css`
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-left: 1px solid #ddd;
+  border-top: 1px solid #eeeeeeee;
+  border-right: 1px solid #eeeeeeee;
+  &:last-of-type {
+    border-bottom: 1px solid #eeeeeeee;
+  }
+  &:before {
+    counter-increment: line;
+    text-align: right;
+    content: counter(line);
+    display: inline-block;
+    padding: 0 0.5em;
+    color: #888;
+    min-width: 40px;
+    margin-left: -40px;
+    margin-right: 1em;
+  }
+`
 export default ({
   match: {
     params: { owner, repo, job },
@@ -75,15 +105,17 @@ export default ({
           setBuild(job.build)
           if ([`WAITING`, `PENDING`].includes(job.status)) {
             return (
-              <Segment padded={`very`}>
-                <Loader>Job is in progress.</Loader>
-              </Segment>
+              <Segment padded={`very`} loading className={PendingLogs} piled />
             )
           }
           return (
             <Segment padded={`very`} piled>
-              <pre>
-                <code>{job.log}</code>
+              <pre className={LogsWrapper}>
+                {(job.log || ``).split(`\n`).map((line, i) => (
+                  <span key={i} className={LogsLine}>
+                    {line}
+                  </span>
+                ))}
               </pre>
             </Segment>
           )

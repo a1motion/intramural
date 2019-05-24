@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 
 import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment"
 import SegmentGroup from "semantic-ui-react/dist/es/elements/Segment/SegmentGroup"
@@ -72,6 +72,18 @@ function getBuildTime(elasped) {
     `${seconds} sec`,
   ].filter(Boolean)
 }
+
+const RealTime = ({ startTime }) => {
+  const [current, setCurrent] = useState(getBuildTime(Date.now() - startTime))
+  useEffect(() => {
+    const s = setInterval(() => {
+      setCurrent(getBuildTime(Date.now() - startTime))
+    }, 1000)
+    return () => clearInterval(s)
+  }, [startTime])
+  return current
+}
+
 const Builds = ({ loading, builds, owner, repo }) => {
   if (loading) {
     return (
@@ -109,13 +121,17 @@ const Builds = ({ loading, builds, owner, repo }) => {
               <div className={Section}>
                 <div className={Item}>
                   <Icon name={`calendar outline`} color={`grey`} />
-                  {getTimeSince(build.startTime)}
+                  {build.endTime === null
+                    ? `Running`
+                    : getTimeSince(build.startTime)}
                 </div>
                 <div className={Item}>
                   <Icon name={`clock outline`} color={`grey`} />
-                  {build.endTime === null
-                    ? `?`
-                    : getBuildTime(build.endTime - build.startTime)}
+                  {build.endTime === null ? (
+                    <RealTime startTime={build.startTime} />
+                  ) : (
+                    getBuildTime(build.endTime - build.startTime)
+                  )}
                 </div>
               </div>
             </div>
