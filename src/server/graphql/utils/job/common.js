@@ -1,5 +1,8 @@
 const { S3 } = require(`aws-sdk`)
 const db = require(`../../../db`)
+const redis = new (require(`ioredis`))({
+  host: process.env.NODE_ENV === `development` ? `localhost` : `redis`,
+})
 
 const s3 = new S3({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -34,7 +37,10 @@ module.exports = (job) => {
           Bucket: `intramural-logs`,
           Key: `${build.id}/${job.id}`,
         },
-        (err, data) => {
+        async (err, data) => {
+          if (err && err.code === `NoSuchKey`) {
+            return resolve(await redis.get(`intramural:logs:${job.id}`))
+          }
           if (err) {
             return resolve(null)
           }

@@ -4,8 +4,27 @@ const express = require(`express`)
 const graphqlHTTP = require(`express-graphql`)
 const logger = require(`morgan`)
 const path = require(`path`)
-const app = express()
+const redis = new (require(`ioredis`))({
+  host: process.env.NODE_ENV === `development` ? `localhost` : `redis`,
+})
 
+const app = express()
+const expressWs = require(`express-ws`)(app)
+
+redis.psubscribe(`intramural:*`)
+redis.on(`pmessage`, (_, channel, message) => {
+  const [__, type, id] = channel.split(`:`)
+  expressWs.getWss().clients.forEach((client) => {
+    if (client.subscribed.some((subs) => subs[type] && subs[type] === id)) {
+      client.send(
+        JSON.stringify({
+          event: `${type}:${id}`,
+          payload: message,
+        })
+      )
+    }
+  })
+})
 app.set(`trust proxy`, true)
 app.set(`x-powered-by`, false)
 
@@ -16,6 +35,7 @@ require(`./meta`)(app)
 
 app.use(`/g`, require(`./routes/g`))
 app.use(`/g`, require(`../hook`))
+app.ws(`/ws`, require(`./ws`))
 
 app.use(`/api/me`, require(`./routes/me`))
 app.use(`/api/repos`, require(`./routes/repos`))

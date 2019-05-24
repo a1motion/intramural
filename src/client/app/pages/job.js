@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useContext } from "react"
 
 import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment"
 import Breadcrumb from "semantic-ui-react/dist/es/collections/Breadcrumb/Breadcrumb"
@@ -12,6 +12,7 @@ import Container from "../components/container"
 import LoadingStack from "../components/LoadingStack"
 
 import Query from "../utils/Query"
+import ws from "../utils/ws"
 
 import "semantic-ui-css/components/segment.min.css"
 import "semantic-ui-css/components/breadcrumb.min.css"
@@ -59,6 +60,37 @@ const LogsLine = css`
     margin-right: 1em;
   }
 `
+
+const RealTimeLogs = ({ initial, job }) => {
+  const [logs, setLogs] = useState(initial)
+  useEffect(() => {
+    let current = initial
+    ws.send(JSON.stringify({ subscribe: `logs:${job}` }))
+    ws.onmessage = (msg) => {
+      const { data } = msg
+      const parsed = JSON.parse(data)
+      if (parsed.event && parsed.event === `logs:${job}`) {
+        current += parsed.payload
+        setLogs(current)
+      }
+    }
+    return () => {
+      ws.send(JSON.stringify({ unsubscribe: `logs:${job}` }))
+    }
+  }, [])
+  return (
+    <Segment padded={`very`} piled color={`yellow`}>
+      <pre className={LogsWrapper}>
+        {(logs || ``).split(`\n`).map((line, i) => (
+          <span key={i} className={LogsLine}>
+            {line}
+          </span>
+        ))}
+      </pre>
+    </Segment>
+  )
+}
+
 export default ({
   match: {
     params: { owner, repo, job },
@@ -104,10 +136,13 @@ export default ({
           const { job } = data
           setJob(job)
           setBuild(job.build)
-          if ([`WAITING`, `PENDING`].includes(job.status)) {
+          if (job.status === `WAITING`) {
             return (
               <Segment padded={`very`} loading className={PendingLogs} piled />
             )
+          }
+          if (job.status === `PENDING`) {
+            return <RealTimeLogs initial={job.log} job={job.id} />
           }
           return (
             <Segment padded={`very`} piled>

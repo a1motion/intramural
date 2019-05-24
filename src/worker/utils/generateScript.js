@@ -139,10 +139,9 @@ function generateSteps(steps) {
     steps
       .map(
         (step) => `
-  echo "$ ${step}"
-  ${step}
-  if [ $? -ne 0 ]; then echo exit $?; fi
-  echo
+    echo "$ ${step}"
+    ${step}
+    if [ $? -ne 0 ]; then exit $?; fi
   `
       )
       .join(`\n`)

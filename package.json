@@ -54,6 +54,7 @@
     "express": "^4.16.4",
     "express-graphql": "^0.8.0",
     "express-session": "^1.16.1",
+    "express-ws": "^4.0.0",
     "gh-got": "^8.1.0",
     "got": "^9.6.0",
     "graphql": "^14.3.0",
@@ -70,11 +71,11 @@
     "probot": "^9.2.10"
   },
   "ava": {
-		"babel": {
-			"testOptions": {
-				"babelrc": false,
-				"configFile": false
-			}
-		}
-	}
+    "babel": {
+      "testOptions": {
+        "babelrc": false,
+        "configFile": false
+      }
+    }
+  }
 }

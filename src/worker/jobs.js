@@ -1,5 +1,9 @@
 const execa = require(`execa`)
 const Bull = require(`bull`)
+const redis = new (require(`ioredis`))({
+  host: process.env.NODE_ENV === `development` ? `localhost` : `redis`,
+})
+
 const debug = require(`debug`)(`intramural:worker:jobs`)
 const { S3 } = require(`aws-sdk`)
 const db = require(`../server/db`)
@@ -61,6 +65,13 @@ module.exports = async (job) => {
         reject: false,
       }
     )
+    let logs = ``
+    d.all.on(`data`, (d) => {
+      const s = d.toString()
+      logs += s
+      redis.publish(`intramural:logs:${job.data.id}`, s)
+      redis.set(`intramural:logs:${job.data.id}`, logs)
+    })
     const r = await d
     if (r.exitCode === 0) {
       await db.query(
@@ -80,6 +91,7 @@ module.exports = async (job) => {
     )
     debug(`Uploading Logs: ${job.data.build_id}/${job.data.id}`)
     await uploadLogs(job.data.build_id, job.data.id, r.all)
+    redis.del(`logs:${job.data.id}`)
     debug(`Uploaded Logs`)
     jobFinished.add(
       {
@@ -95,6 +107,15 @@ module.exports = async (job) => {
     await db.query(
       `update intramural_jobs set status = $1, end_time = $2 where "id" = $3`,
       [`failure`, Date.now(), job.data.id]
+    )
+    jobFinished.add(
+      {
+        build: job.data.build_id,
+        job: job.data.id,
+      },
+      {
+        delay: 250 + Math.random() * 50,
+      }
     )
   }
 }
