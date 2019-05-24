@@ -44,7 +44,7 @@ module.exports = async (job) => {
       [job.data.repo]
     )
     let tag = ``
-    if (job.uses && job.uses.node) {
+    if (job.data.meta.uses && job.data.meta.uses.node) {
       tag += `Node ${job.uses.node}`
     }
     await db.query(
