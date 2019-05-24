@@ -43,9 +43,13 @@ module.exports = async (job) => {
       `select *, (select install_id from intramural_accounts acc where acc.id = owner) from intramural_repos where id = $1`,
       [job.data.repo]
     )
+    let tag = ``
+    if (job.uses && job.uses.node) {
+      tag += `Node ${job.uses.node}`
+    }
     await db.query(
-      `update intramural_jobs set status = $1, start_time = $2 where "id" = $3`,
-      [`pending`, Date.now(), job.data.id]
+      `update intramural_jobs set status = $1, start_time = $2, tag = $3 where "id" = $4`,
+      [`pending`, Date.now(), tag, job.data.id]
     )
     const script = await generateScript(repo, job.data, job.data.meta)
     debug(`Starting #${job.data.build}.${job.data.job}`)
