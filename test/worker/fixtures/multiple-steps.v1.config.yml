@@ -1,0 +1,9 @@
+version: 1
+
+node:
+  - 10
+
+steps:
+  - yarn
+  - yarn lint
+  - yarn test

@@ -1,0 +1,13 @@
+version: 2
+
+steps:
+  test:
+    - yarn
+    - yarn lint
+    - yarn test
+
+jobs:
+  - uses:
+      node: 10
+    steps:
+      - '&test'

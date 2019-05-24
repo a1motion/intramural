@@ -9,7 +9,8 @@ module.exports = async (repo, build, job) => {
   if (job.version === 1) {
     const full_name = build.pull_request ? build.full_name : repo.full_name
     let script = `
-    echo "Worker Info:\n"
+    echo "Worker Info:"
+    echo ""
     echo "Hostname:\t$(hostname)"
     echo "Startup:\t$(cut -d " " -f1 /proc/uptime)"
     echo ""

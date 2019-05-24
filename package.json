@@ -68,5 +68,13 @@
     "pg": "^7.11.0",
     "physical-cpu-count": "^2.0.0",
     "probot": "^9.2.10"
-  }
+  },
+  "ava": {
+		"babel": {
+			"testOptions": {
+				"babelrc": false,
+				"configFile": false
+			}
+		}
+	}
 }
