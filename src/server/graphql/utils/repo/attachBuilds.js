@@ -14,7 +14,7 @@ module.exports = (repo, req) => {
       }
     }
     const { rows: builds } = await db.query(
-      `select distinct on (branch) *, (select count(*) from intramural_builds t where t.branch = b.branch) as total_builds from intramural_builds b where repo = $1 order by branch, "id" desc`,
+      `select distinct on (branch) *, (select count(*) from intramural_builds t where t.branch = b.branch and repo = $1) as total_builds from intramural_builds b where repo = $1 order by branch, "id" desc`,
       [repo.id]
     )
     builds.forEach((build) => {
