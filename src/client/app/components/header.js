@@ -24,6 +24,8 @@ import "semantic-ui-css/components/button.min.css"
 import "semantic-ui-css/components/icon.min.css"
 import "semantic-ui-css/components/loader.min.css"
 import "semantic-ui-css/components/header.min.css"
+import "semantic-ui-css/components/menu.min.css"
+import "semantic-ui-css/components/transition.min.css"
 
 const githubColors = css`
   color: #333 !important;
@@ -52,7 +54,10 @@ const Login = () => {
   )
 }
 const User = ({ user }) => (
-  <Dropdown icon={<Image src={user.image} size={`mini`} />} direction={`left`}>
+  <Dropdown
+    icon={<Image src={user.image} size={`mini`} />}
+    direction={`left`}
+    className={DisableTextBlock}>
     <DropdownMenu>
       <DropdownHeader>{user.name}</DropdownHeader>
       <DropdownItem
@@ -80,6 +85,11 @@ const FlexItem = css`
 `
 const FlexSpacer = css`
   flex: 1 1 auto;
+`
+const DisableTextBlock = css`
+  & > .text {
+    display: inline !important;
+  }
 `
 export const Header = connect(mapStateToProps)(({ user }) => (
   <Segment className={FlexBox}>
