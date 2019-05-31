@@ -17,6 +17,7 @@ import ws from "../utils/ws"
 import "semantic-ui-css/components/segment.min.css"
 import "semantic-ui-css/components/breadcrumb.min.css"
 import "semantic-ui-css/components/icon.min.css"
+import { getColorFromStatus } from "../utils/getColorFromStatus"
 
 const GET_JOB_QUERY = `query ($jobId: ID!){
   job(id: $jobId) {
@@ -145,7 +146,10 @@ export default ({
             return <RealTimeLogs initial={job.log} job={job.id} />
           }
           return (
-            <Segment padded={`very`} piled>
+            <Segment
+              padded={`very`}
+              piled
+              color={getColorFromStatus(job.status)}>
               <pre className={LogsWrapper}>
                 {(job.log || ``).split(`\n`).map((line, i) => (
                   <span key={i} className={LogsLine}>

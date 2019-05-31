@@ -6,6 +6,8 @@ import Icon from "semantic-ui-react/dist/es/elements/Icon/Icon"
 import Breadcrumb from "semantic-ui-react/dist/es/collections/Breadcrumb/Breadcrumb"
 import BreadcrumbDivider from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbDivider"
 import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbSection"
+import Button from "semantic-ui-react/dist/es/elements/Button/Button"
+import ButtonContent from "semantic-ui-react/dist/es/elements/Button/ButtonContent"
 
 import { Redirect, Link } from "react-router-dom"
 import Container from "../components/container"
@@ -14,6 +16,7 @@ import { css } from "linaria"
 import "semantic-ui-css/components/segment.min.css"
 import "semantic-ui-css/components/icon.min.css"
 import "semantic-ui-css/components/breadcrumb.min.css"
+import "semantic-ui-css/components/button.min.css"
 
 import Query from "../utils/Query"
 import { getColorFromStatus } from "../utils/getColorFromStatus"
@@ -21,9 +24,16 @@ import LoadingStack from "../components/LoadingStack"
 
 const FlexBox = css`
   display: flex;
+  align-items: center;
+`
+const FlexGrow = css`
+  flex: 1 0 auto;
+`
+const FlexShrink = css`
+  flex: 0 0 auto;
 `
 const Section = css`
-  width: 25%;
+  width: 33%;
 `
 const Item = css`
   margin: 8px 0;
@@ -89,9 +99,9 @@ const Builds = ({ loading, builds, owner, repo }) => {
       {builds
         .sort((a, b) => {
           if (b.branch === `master`) {
-            return 1
+            return 1000
           }
-          return Number(b.id) - Number(a.id)
+          return -1
         })
         .map((build) => (
           <Segment key={build.id} color={getColorFromStatus(build)}>
@@ -152,15 +162,31 @@ export default ({
 }) => {
   return (
     <Container>
-      <Breadcrumb>
-        <BreadcrumbSection as={Link} to={`/${owner}`}>
-          {owner}
-        </BreadcrumbSection>
-        <BreadcrumbDivider icon={`right chevron`} />
-        <BreadcrumbSection as={Link} to={`/${owner}/${repo}`}>
-          {repo}
-        </BreadcrumbSection>
-      </Breadcrumb>
+      <div className={FlexBox}>
+        <Breadcrumb className={FlexGrow}>
+          <BreadcrumbSection as={Link} to={`/${owner}`}>
+            {owner}
+          </BreadcrumbSection>
+          <BreadcrumbDivider icon={`right chevron`} />
+          <BreadcrumbSection as={Link} to={`/${owner}/${repo}`}>
+            {repo}
+          </BreadcrumbSection>
+        </Breadcrumb>
+        <div className={FlexShrink}>
+          <Button
+            size={`tiny`}
+            compact
+            basic
+            animated
+            as={Link}
+            to={`/${owner}/${repo}/settings`}>
+            <ButtonContent visible>Settings</ButtonContent>
+            <ButtonContent hidden>
+              <Icon name={`settings`} />
+            </ButtonContent>
+          </Button>
+        </div>
+      </div>
       <Query query={GET_BUILDS} variables={{ fullName: `${owner}/${repo}` }}>
         {({ loading, error, data }) => {
           if (error) {

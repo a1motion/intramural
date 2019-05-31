@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 
-import { Link } from "react-router-dom"
+import { Link, Redirect } from "react-router-dom"
 import { css } from "linaria"
 
 import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment"
@@ -115,6 +115,11 @@ export default ({
               return <LoadingStack />
             }
             const { build } = data
+            if (build.jobs && build.jobs.length === 1) {
+              return (
+                <Redirect to={`/${owner}/${repo}/jobs/${build.jobs[0].id}`} />
+              )
+            }
             setBuildNum(build.num)
             return build.jobs.map((job) => (
               <Segment
