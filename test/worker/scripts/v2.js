@@ -35,3 +35,18 @@ test(`simple`, async (t) => {
   })
   t.is(s, await getFixtures(`simple.v2.script.txt`))
 })
+
+test(`should add apt deps`, async (t) => {
+  const s = await genScript({
+    version: 2,
+    deps: {
+      apt: [`libpng-dev`],
+    },
+    env: {},
+    uses: {
+      node: 10,
+    },
+    steps: [`yarn test`],
+  })
+  t.is(s, await getFixtures(`deps.v2.script.txt`))
+})

@@ -4,7 +4,7 @@ echo
 echo "Hostname:	$(hostname)"
 echo
 echo
-
+sudo apt-get install -qqy -o=Dpkg::Use-Pty=0 libpng-dev > /dev/null
 echo
 
 export CI=true

@@ -71,7 +71,7 @@ module.exports = async (repo, build, job) => {
     `)
     script += `echo\n`
     script += generateDeps(job.deps)
-    script += `echo\n`
+    script += `\necho\n`
     script += align(`
     export CI=true
     export NODE_ENV=test
@@ -79,7 +79,7 @@ module.exports = async (repo, build, job) => {
     `)
     script += `echo\n`
     script += generateEnv(job.env)
-    script += `echo\n`
+    script += `\necho\n`
     script += align(`
     [[ -s $NVM_DIR/nvm.sh ]] && . $NVM_DIR/nvm.sh
     echo "$ git clone --depth=50 --branch=${
