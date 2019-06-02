@@ -1,5 +1,9 @@
 const got = require(`gh-got`)
+const CACHE = {}
 module.exports = async function getRepos(accessToken) {
+  if (CACHE[accessToken] && CACHE[accessToken].expires > Date.now()) {
+    return CACHE[accessToken].data
+  }
   const {
     body: { installations },
   } = await got(`/user/installations`, {
@@ -9,7 +13,7 @@ module.exports = async function getRepos(accessToken) {
       Accept: `application/vnd.github.machine-man-preview+json`,
     },
   })
-  return []
+  const repos = []
     .concat(
       ...(await Promise.all(
         installations.map(async (install) => {
@@ -27,4 +31,9 @@ module.exports = async function getRepos(accessToken) {
       ))
     )
     .map((repo) => repo.id)
+  CACHE[accessToken] = {
+    data: repos,
+    expires: Date.now() + 1000 * 60 * 5,
+  }
+  return repos
 }

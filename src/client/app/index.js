@@ -13,6 +13,7 @@ const Dashboard = lazy(() => import(`./pages/dashboard`))
 const Repo = lazy(() => import(`./pages/repo`))
 const Build = lazy(() => import(`./pages/build`))
 const Job = lazy(() => import(`./pages/job`))
+const Settings = lazy(() => import(`./pages/settings`))
 
 function mapStateToProps(state) {
   const { user } = state
@@ -46,6 +47,7 @@ export default connect(mapStateToProps)(({ dispatch, user }) => {
               component={Build}
             />
             <Route path={`/:owner/:repo/jobs/:job`} exact component={Job} />
+            <Route path={`/:owner/:repo/settings`} exact component={Settings} />
             <Route path={`/:owner/:repo`} exact component={Repo} />
             <Route path={`/`} exact component={Dashboard} />
             <Route render={() => <Redirect to={`/`} />} />
