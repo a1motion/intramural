@@ -51,7 +51,7 @@
     "debug": "^4.1.1",
     "dotenv": "^8.0.0",
     "execa": "sindresorhus/execa",
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "express-graphql": "^0.8.0",
     "express-session": "^1.16.1",
     "express-ws": "^4.0.0",
