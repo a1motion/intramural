@@ -3558,12 +3558,13 @@ execa@^0.7.0:
 
 execa@^1.0.0, execa@sindresorhus/execa:
   version "1.0.0"
-  resolved "https://codeload.github.com/sindresorhus/execa/tar.gz/c8a53da6748885423f73812580afd59699b36e31"
+  uid "6fb284be38f6dc7e53250d4b8549598ab717143d"
+  resolved "https://codeload.github.com/sindresorhus/execa/tar.gz/6fb284be38f6dc7e53250d4b8549598ab717143d"
   dependencies:
     cross-spawn "^6.0.5"
     get-stream "^5.0.0"
     is-stream "^2.0.0"
-    merge-stream "^1.0.1"
+    merge-stream "^2.0.0"
     npm-run-path "^3.0.0"
     p-finally "^1.0.0"
     signal-exit "^3.0.2"
@@ -5598,12 +5599,10 @@ merge-source-map@1.0.4:
   dependencies:
     source-map "^0.5.6"
 
-merge-stream@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/merge-stream/-/merge-stream-1.0.1.tgz#4041202d508a342ba00174008df0c251b8c135e1"
-  integrity sha1-QEEgLVCKNCugAXQAjfDCUbjBNeE=
-  dependencies:
-    readable-stream "^2.0.1"
+merge-stream@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/merge-stream/-/merge-stream-2.0.0.tgz#52823629a14dd00c9770fb6ad47dc6310f2c1f60"
+  integrity sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==
 
 merge2@^1.2.3:
   version "1.2.3"
