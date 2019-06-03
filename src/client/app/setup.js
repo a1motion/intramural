@@ -1,10 +1,10 @@
-import React from "react"
-import { Provider } from "react-redux"
-import { BrowserRouter as Router } from "react-router-dom"
-import configureStore from "./configureStore"
-import App from "./"
+import React from "react";
+import { Provider } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
+import configureStore from "./configureStore";
+import App from "./";
 
-const store = configureStore()
+const store = configureStore();
 
 export const Setup = () => (
   <Provider store={store}>
@@ -12,4 +12,4 @@ export const Setup = () => (
       <App />
     </Router>
   </Provider>
-)
+);

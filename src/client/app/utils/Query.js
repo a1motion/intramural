@@ -1,4 +1,4 @@
-import { useKy } from "./useKy"
+import { useKy } from "./useKy";
 
 export default ({ children, query, variables }) => {
   const [data, loading] = useKy(
@@ -10,6 +10,6 @@ export default ({ children, query, variables }) => {
       json: { query, variables },
       credentials: `include`,
     }
-  )
-  return children({ loading, ...data })
-}
+  );
+  return children({ loading, ...data });
+};

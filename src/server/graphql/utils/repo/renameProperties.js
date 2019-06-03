@@ -1,4 +1,4 @@
 module.exports = (repo) => {
-  repo.fullName = repo.full_name
-  return repo
-}
+  repo.fullName = repo.full_name;
+  return repo;
+};

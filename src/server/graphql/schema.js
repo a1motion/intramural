@@ -1,6 +1,6 @@
-const fs = require(`fs`)
-const path = require(`path`)
-const { buildSchema } = require(`graphql`)
+const fs = require(`fs`);
+const path = require(`path`);
+const { buildSchema } = require(`graphql`);
 
 module.exports = {
   schema: buildSchema(
@@ -8,11 +8,11 @@ module.exports = {
   ),
   rootValue: {
     viewer: (_, req) => {
-      return req.session.USER
+      return req.session.USER;
     },
     repository: require(`./queries/repository`),
     repositories: require(`./queries/repositories`),
     build: require(`./queries/build`),
     job: require(`./queries/job`),
   },
-}
+};

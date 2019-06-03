@@ -1,23 +1,23 @@
-import React, { useEffect, Suspense, lazy } from "react"
-import { Switch, Route, Redirect } from "react-router-dom"
-import ky from "ky"
-import { connect } from "react-redux"
-import { Header } from "./components/header"
-import { USER_PENDING, checkLogin } from "./actions/user"
+import React, { useEffect, Suspense, lazy } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
+import ky from "ky";
+import { connect } from "react-redux";
+import { Header } from "./components/header";
+import { USER_PENDING, checkLogin } from "./actions/user";
 
-import "./index.css"
-import "semantic-ui-css/components/reset.min.css"
-import "semantic-ui-css/components/site.min.css"
+import "./index.css";
+import "semantic-ui-css/components/reset.min.css";
+import "semantic-ui-css/components/site.min.css";
 
-const Dashboard = lazy(() => import(`./pages/dashboard`))
-const Repo = lazy(() => import(`./pages/repo`))
-const Build = lazy(() => import(`./pages/build`))
-const Job = lazy(() => import(`./pages/job`))
-const Settings = lazy(() => import(`./pages/settings`))
+const Dashboard = lazy(() => import(`./pages/dashboard`));
+const Repo = lazy(() => import(`./pages/repo`));
+const Build = lazy(() => import(`./pages/build`));
+const Job = lazy(() => import(`./pages/job`));
+const Settings = lazy(() => import(`./pages/settings`));
 
 function mapStateToProps(state) {
-  const { user } = state
-  return { user }
+  const { user } = state;
+  return { user };
 }
 
 export default connect(mapStateToProps)(({ dispatch, user }) => {
@@ -32,9 +32,9 @@ export default connect(mapStateToProps)(({ dispatch, user }) => {
     )
       .json()
       .then((data) => {
-        dispatch(checkLogin(data))
-      })
-  }, [])
+        dispatch(checkLogin(data));
+      });
+  }, []);
   return (
     <div>
       <Header />
@@ -56,5 +56,5 @@ export default connect(mapStateToProps)(({ dispatch, user }) => {
         {user.status === USER_PENDING && <div />}
       </Suspense>
     </div>
-  )
-})
+  );
+});

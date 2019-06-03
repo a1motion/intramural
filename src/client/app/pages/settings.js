@@ -1,32 +1,32 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
 
-import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment"
-import Input from "semantic-ui-react/dist/es/elements/Input/Input"
-import Breadcrumb from "semantic-ui-react/dist/es/collections/Breadcrumb/Breadcrumb"
-import BreadcrumbDivider from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbDivider"
-import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbSection"
+import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment";
+import Input from "semantic-ui-react/dist/es/elements/Input/Input";
+import Breadcrumb from "semantic-ui-react/dist/es/collections/Breadcrumb/Breadcrumb";
+import BreadcrumbDivider from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbDivider";
+import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbSection";
 
-import { Link } from "react-router-dom"
-import { css } from "linaria"
+import { Link } from "react-router-dom";
+import { css } from "linaria";
 
-import Container from "../components/container"
-import LoadingStack from "../components/LoadingStack"
+import Container from "../components/container";
+import LoadingStack from "../components/LoadingStack";
 
-import Query from "../utils/Query"
+import Query from "../utils/Query";
 
-import "semantic-ui-css/components/segment.min.css"
-import "semantic-ui-css/components/breadcrumb.min.css"
-import "semantic-ui-css/components/input.min.css"
+import "semantic-ui-css/components/segment.min.css";
+import "semantic-ui-css/components/breadcrumb.min.css";
+import "semantic-ui-css/components/input.min.css";
 
 const PADDED = css`
   padding: 20px 0;
-`
+`;
 
 const GET_ENV_VARIABLES = `query($fullName: String!) {
   repository(fullName: $fullName) {
     id
   }
-}`
+}`;
 export default ({
   match: {
     params: { owner, repo },
@@ -48,10 +48,10 @@ export default ({
         variables={{ fullName: `${owner}/${repo}` }}>
         {({ loading, data, error }) => {
           if (error) {
-            return <div />
+            return <div />;
           }
           if (loading) {
-            return <LoadingStack />
+            return <LoadingStack />;
           }
           return (
             <div className={PADDED}>
@@ -66,9 +66,9 @@ export default ({
                 <Segment padded={`very`} attached />
               </div>
             </div>
-          )
+          );
         }}
       </Query>
     </Container>
-  )
-}
+  );
+};

@@ -1,19 +1,19 @@
-import React from "react"
+import React from "react";
 
-import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment"
-import SegmentGroup from "semantic-ui-react/dist/es/elements/Segment/SegmentGroup"
-import Placeholder from "semantic-ui-react/dist/es/elements/Placeholder/Placeholder"
-import PlaceholderParagraph from "semantic-ui-react/dist/es/elements/Placeholder/PlaceholderParagraph"
-import PlaceholderLine from "semantic-ui-react/dist/es/elements/Placeholder/PlaceholderLine"
+import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment";
+import SegmentGroup from "semantic-ui-react/dist/es/elements/Segment/SegmentGroup";
+import Placeholder from "semantic-ui-react/dist/es/elements/Placeholder/Placeholder";
+import PlaceholderParagraph from "semantic-ui-react/dist/es/elements/Placeholder/PlaceholderParagraph";
+import PlaceholderLine from "semantic-ui-react/dist/es/elements/Placeholder/PlaceholderLine";
 
-import { Link } from "react-router-dom"
-import Container from "../components/container"
-import { css } from "linaria"
+import { Link } from "react-router-dom";
+import Container from "../components/container";
+import { css } from "linaria";
 
-import "semantic-ui-css/components/segment.min.css"
-import "semantic-ui-css/components/placeholder.min.css"
-import Query from "../utils/Query"
-import { getColorFromStatus } from "../utils/getColorFromStatus"
+import "semantic-ui-css/components/segment.min.css";
+import "semantic-ui-css/components/placeholder.min.css";
+import Query from "../utils/Query";
+import { getColorFromStatus } from "../utils/getColorFromStatus";
 
 const Repo = css`
   cursor: pointer;
@@ -21,7 +21,7 @@ const Repo = css`
   &:hover {
     background-color: #f0f0f0;
   }
-`
+`;
 
 const GET_REPOS = `{
   repositories {
@@ -32,7 +32,7 @@ const GET_REPOS = `{
     }
   }
 }
-`
+`;
 
 export default () => {
   return (
@@ -41,7 +41,7 @@ export default () => {
         <Query query={GET_REPOS}>
           {({ loading, error, data }) => {
             if (error) {
-              return <div />
+              return <div />;
             }
             if (loading || !data) {
               return new Array(8).fill(0).map((_, i) => (
@@ -52,7 +52,7 @@ export default () => {
                     </PlaceholderParagraph>
                   </Placeholder>
                 </Segment>
-              ))
+              ));
             }
 
             return data.repositories.map((repo) => (
@@ -65,10 +65,10 @@ export default () => {
                 color={getColorFromStatus(repo.lastBuild)}>
                 <span>{repo.fullName}</span>
               </Segment>
-            ))
+            ));
           }}
         </Query>
       </SegmentGroup>
     </Container>
-  )
-}
+  );
+};

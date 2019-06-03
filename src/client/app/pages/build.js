@@ -1,37 +1,37 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
 
-import { Link, Redirect } from "react-router-dom"
-import { css } from "linaria"
+import { Link, Redirect } from "react-router-dom";
+import { css } from "linaria";
 
-import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment"
-import SegmentGroup from "semantic-ui-react/dist/es/elements/Segment/SegmentGroup"
-import Icon from "semantic-ui-react/dist/es/elements/Icon/Icon"
-import Breadcrumb from "semantic-ui-react/dist/es/collections/Breadcrumb/Breadcrumb"
-import BreadcrumbDivider from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbDivider"
-import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbSection"
+import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment";
+import SegmentGroup from "semantic-ui-react/dist/es/elements/Segment/SegmentGroup";
+import Icon from "semantic-ui-react/dist/es/elements/Icon/Icon";
+import Breadcrumb from "semantic-ui-react/dist/es/collections/Breadcrumb/Breadcrumb";
+import BreadcrumbDivider from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbDivider";
+import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbSection";
 
-import Container from "../components/container"
-import LoadingStack from "../components/LoadingStack"
+import Container from "../components/container";
+import LoadingStack from "../components/LoadingStack";
 
-import Query from "../utils/Query"
+import Query from "../utils/Query";
 
-import "semantic-ui-css/components/segment.min.css"
-import "semantic-ui-css/components/icon.min.css"
-import "semantic-ui-css/components/breadcrumb.min.css"
+import "semantic-ui-css/components/segment.min.css";
+import "semantic-ui-css/components/icon.min.css";
+import "semantic-ui-css/components/breadcrumb.min.css";
 
-import { getColorFromStatus } from "../utils/getColorFromStatus"
-import { classnames } from "../utils/classnames"
+import { getColorFromStatus } from "../utils/getColorFromStatus";
+import { classnames } from "../utils/classnames";
 
 function getBuildTime(elasped) {
-  let seconds = Math.floor(elasped / 1000)
-  const hours = Math.floor(seconds / 3600)
-  const minutes = Math.floor((seconds % 3600) / 60)
-  seconds %= 60
+  let seconds = Math.floor(elasped / 1000);
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  seconds %= 60;
   return [
     hours > 0 && `${hours} hour `,
     minutes > 0 && `${minutes} min `,
     `${seconds} sec`,
-  ].filter(Boolean)
+  ].filter(Boolean);
 }
 
 const Job = css`
@@ -40,18 +40,18 @@ const Job = css`
   &:hover {
     background-color: #f0f0f0;
   }
-`
+`;
 
 const FlexBox = css`
   display: flex;
   align-items: center;
-`
+`;
 const FlexShrink = css`
   flex: 0 0 auto;
-`
+`;
 const FlexGrow = css`
   flex: 1 1 auto;
-`
+`;
 const GET_BUILD_QUERY = `query ($buildId: ID!){
   build(id: $buildId) {
     num
@@ -65,25 +65,25 @@ const GET_BUILD_QUERY = `query ($buildId: ID!){
       tag
     }
   }
-}`
+}`;
 
 const RealTime = ({ startTime }) => {
-  const [current, setCurrent] = useState(getBuildTime(Date.now() - startTime))
+  const [current, setCurrent] = useState(getBuildTime(Date.now() - startTime));
   useEffect(() => {
     const s = setInterval(() => {
-      setCurrent(getBuildTime(Date.now() - startTime))
-    }, 1000)
-    return () => clearInterval(s)
-  }, [startTime])
-  return current
-}
+      setCurrent(getBuildTime(Date.now() - startTime));
+    }, 1000);
+    return () => clearInterval(s);
+  }, [startTime]);
+  return current;
+};
 
 export default ({
   match: {
     params: { build, owner, repo },
   },
 }) => {
-  const [buildNum, setBuildNum] = useState(null)
+  const [buildNum, setBuildNum] = useState(null);
   return (
     <Container>
       <Breadcrumb>
@@ -109,18 +109,18 @@ export default ({
         <Query query={GET_BUILD_QUERY} variables={{ buildId: build }}>
           {({ loading, data, error }) => {
             if (error) {
-              return <div />
+              return <div />;
             }
             if (loading) {
-              return <LoadingStack />
+              return <LoadingStack />;
             }
-            const { build } = data
+            const { build } = data;
             if (build.jobs && build.jobs.length === 1) {
               return (
                 <Redirect to={`/${owner}/${repo}/jobs/${build.jobs[0].id}`} />
-              )
+              );
             }
-            setBuildNum(build.num)
+            setBuildNum(build.num);
             return build.jobs.map((job) => (
               <Segment
                 as={Link}
@@ -143,10 +143,10 @@ export default ({
                   )}
                 </span>
               </Segment>
-            ))
+            ));
           }}
         </Query>
       </SegmentGroup>
     </Container>
-  )
-}
+  );
+};

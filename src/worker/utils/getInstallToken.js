@@ -1,4 +1,4 @@
-const got = require(`gh-got`)
+const got = require(`gh-got`);
 
 module.exports = async (jwt, install_id) => {
   const {
@@ -9,6 +9,6 @@ module.exports = async (jwt, install_id) => {
       Accept: `application/vnd.github.machine-man-preview+json`,
       Authorization: `Bearer ${jwt}`,
     },
-  })
-  return token
-}
+  });
+  return token;
+};

@@ -1,7 +1,7 @@
-const got = require(`gh-got`)
-const db = require(`../../server/db`)
-const getToken = require(`./getToken`)
-const getInstallToken = require(`./getInstallToken`)
+const got = require(`gh-got`);
+const db = require(`../../server/db`);
+const getToken = require(`./getToken`);
+const getInstallToken = require(`./getInstallToken`);
 
 module.exports = async (
   build_id,
@@ -17,8 +17,8 @@ module.exports = async (
   } = await db.query(
     `select *, (select install_id from intramural_accounts acc where acc.id = owner) from intramural_repos where id = $1`,
     [repo_id]
-  )
-  const token = await getInstallToken(getToken(), repo.install_id)
+  );
+  const token = await getInstallToken(getToken(), repo.install_id);
   await got.post(`/repos/${repo.full_name}/statuses/${commit}`, {
     json: true,
     token,
@@ -32,5 +32,5 @@ module.exports = async (
         repo.full_name
       }/builds/${build_id}`,
     },
-  })
-}
+  });
+};

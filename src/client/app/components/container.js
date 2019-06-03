@@ -1,6 +1,6 @@
-import React from "react"
-import { css } from "linaria"
-import { classnames } from "../utils/classnames"
+import React from "react";
+import { css } from "linaria";
+import { classnames } from "../utils/classnames";
 
 const container = css`
   margin: 3em auto;
@@ -15,8 +15,8 @@ const container = css`
   @media only screen and (min-width: 1200px) {
     width: 70%;
   }
-`
+`;
 
 export default (props) => (
   <div {...props} className={classnames(container, props.className)} />
-)
+);

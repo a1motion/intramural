@@ -1,18 +1,18 @@
-const app = require(`express`).Router()
-const got = require(`gh-got`)
-const db = require(`../db`)
-const LRU = require(`lru-cache`)
+const app = require(`express`).Router();
+const got = require(`gh-got`);
+const db = require(`../db`);
+const LRU = require(`lru-cache`);
 const repoCache = new LRU({
   max: 1000,
   maxAge: 15000,
-})
+});
 app.get(`/`, async (req, res) => {
   if (!req.session || !req.session.USER) {
-    return res.sendStatus(401)
+    return res.sendStatus(401);
   }
-  const cached_repos = repoCache.get(req.session.ACCESS_TOKEN)
+  const cached_repos = repoCache.get(req.session.ACCESS_TOKEN);
   if (cached_repos) {
-    return res.json(cached_repos)
+    return res.json(cached_repos);
   }
   const {
     body: { installations },
@@ -22,7 +22,7 @@ app.get(`/`, async (req, res) => {
     headers: {
       Accept: `application/vnd.github.machine-man-preview+json`,
     },
-  })
+  });
   const r = []
     .concat(
       ...(await Promise.all(
@@ -35,12 +35,12 @@ app.get(`/`, async (req, res) => {
               Accept: `application/vnd.github.machine-man-preview+json`,
             },
             json: true,
-          })
-          return repositories
+          });
+          return repositories;
         })
       ))
     )
-    .map((repo) => repo.id)
+    .map((repo) => repo.id);
   const { rows: repos } = await db.query(
     `SELECT r.*,
         b.status, b.start_time, b.end_time
@@ -55,9 +55,9 @@ app.get(`/`, async (req, res) => {
       ) AS b ON TRUE
     WHERE id = ANY($1);`,
     [r]
-  )
-  repoCache.set(req.session.ACCESS_TOKEN, repos)
-  return res.json(repos)
-})
+  );
+  repoCache.set(req.session.ACCESS_TOKEN, repos);
+  return res.json(repos);
+});
 
-module.exports = app
+module.exports = app;

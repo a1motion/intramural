@@ -1,39 +1,39 @@
-import React, { useState } from "react"
-import { connect } from "react-redux"
+import React, { useState } from "react";
+import { connect } from "react-redux";
 
-import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment"
-import Image from "semantic-ui-react/dist/es/elements/Image/Image"
-import Dropdown from "semantic-ui-react/dist/es/modules/Dropdown/Dropdown"
-import DropdownMenu from "semantic-ui-react/dist/es/modules/Dropdown/DropdownMenu"
-import DropdownHeader from "semantic-ui-react/dist/es/modules/Dropdown/DropdownHeader"
-import DropdownItem from "semantic-ui-react/dist/es/modules/Dropdown/DropdownItem"
-import Button from "semantic-ui-react/dist/es/elements/Button/Button"
-import ButtonContent from "semantic-ui-react/dist/es/elements/Button/ButtonContent"
-import Icon from "semantic-ui-react/dist/es/elements/Icon/Icon"
-import Loader from "semantic-ui-react/dist/es/elements/Loader/Loader"
-import Title from "semantic-ui-react/dist/es/elements/Header/Header"
+import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment";
+import Image from "semantic-ui-react/dist/es/elements/Image/Image";
+import Dropdown from "semantic-ui-react/dist/es/modules/Dropdown/Dropdown";
+import DropdownMenu from "semantic-ui-react/dist/es/modules/Dropdown/DropdownMenu";
+import DropdownHeader from "semantic-ui-react/dist/es/modules/Dropdown/DropdownHeader";
+import DropdownItem from "semantic-ui-react/dist/es/modules/Dropdown/DropdownItem";
+import Button from "semantic-ui-react/dist/es/elements/Button/Button";
+import ButtonContent from "semantic-ui-react/dist/es/elements/Button/ButtonContent";
+import Icon from "semantic-ui-react/dist/es/elements/Icon/Icon";
+import Loader from "semantic-ui-react/dist/es/elements/Loader/Loader";
+import Title from "semantic-ui-react/dist/es/elements/Header/Header";
 
-import { Link } from "react-router-dom"
-import { css } from "linaria"
-import { USER_LOGGED_IN, USER_LOGGED_OUT, USER_PENDING } from "../actions/user"
+import { Link } from "react-router-dom";
+import { css } from "linaria";
+import { USER_LOGGED_IN, USER_LOGGED_OUT, USER_PENDING } from "../actions/user";
 
-import "semantic-ui-css/components/segment.min.css"
-import "semantic-ui-css/components/image.min.css"
-import "semantic-ui-css/components/dropdown.min.css"
-import "semantic-ui-css/components/button.min.css"
-import "semantic-ui-css/components/icon.min.css"
-import "semantic-ui-css/components/loader.min.css"
-import "semantic-ui-css/components/header.min.css"
-import "semantic-ui-css/components/menu.min.css"
-import "semantic-ui-css/components/transition.min.css"
+import "semantic-ui-css/components/segment.min.css";
+import "semantic-ui-css/components/image.min.css";
+import "semantic-ui-css/components/dropdown.min.css";
+import "semantic-ui-css/components/button.min.css";
+import "semantic-ui-css/components/icon.min.css";
+import "semantic-ui-css/components/loader.min.css";
+import "semantic-ui-css/components/header.min.css";
+import "semantic-ui-css/components/menu.min.css";
+import "semantic-ui-css/components/transition.min.css";
 
 const githubColors = css`
   color: #333 !important;
   box-shadow: 0 0 0 1px #333 inset !important;
-`
+`;
 
 const Login = () => {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   return (
     <Button
       animated
@@ -41,18 +41,18 @@ const Login = () => {
       loading={loading}
       className={githubColors}
       onClick={() => {
-        setLoading(true)
+        setLoading(true);
         window.location = `${
           process.env.NODE_ENV === `development` ? `//localhost:9005` : ``
-        }/g`
+        }/g`;
       }}>
       <ButtonContent visible>Login with Github</ButtonContent>
       <ButtonContent hidden>
         <Icon name={`github`} />
       </ButtonContent>
     </Button>
-  )
-}
+  );
+};
 const User = ({ user }) => (
   <Dropdown
     icon={<Image src={user.image} size={`mini`} />}
@@ -70,27 +70,27 @@ const User = ({ user }) => (
       </DropdownItem>
     </DropdownMenu>
   </Dropdown>
-)
+);
 
 function mapStateToProps(state) {
-  const { user } = state
-  return { user }
+  const { user } = state;
+  return { user };
 }
 const FlexBox = css`
   display: flex;
   align-items: center;
-`
+`;
 const FlexItem = css`
   flex: 0 0 auto;
-`
+`;
 const FlexSpacer = css`
   flex: 1 1 auto;
-`
+`;
 const DisableTextBlock = css`
   & > .text {
     display: inline !important;
   }
-`
+`;
 export const Header = connect(mapStateToProps)(({ user }) => (
   <Segment className={FlexBox}>
     <div className={FlexItem}>
@@ -114,4 +114,4 @@ export const Header = connect(mapStateToProps)(({ user }) => (
       {user.status === USER_LOGGED_OUT && <Login />}
     </div>
   </Segment>
-))
+));

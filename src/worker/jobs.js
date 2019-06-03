@@ -1,24 +1,24 @@
-const execa = require(`execa`)
-const Bull = require(`bull`)
+const execa = require(`execa`);
+const Bull = require(`bull`);
 const redis = new (require(`ioredis`))({
   host: process.env.NODE_ENV === `development` ? `localhost` : `redis`,
-})
+});
 
-const debug = require(`debug`)(`intramural:worker:jobs`)
-const { S3 } = require(`aws-sdk`)
-const db = require(`../server/db`)
-const generateScript = require(`./utils/generateScript`)
+const debug = require(`debug`)(`intramural:worker:jobs`);
+const { S3 } = require(`aws-sdk`);
+const db = require(`../server/db`);
+const generateScript = require(`./utils/generateScript`);
 
 const jobFinished = new Bull(`job_finished`, {
   redis: {
     host: process.env.NODE_ENV === `development` ? `localhost` : `redis`,
   },
-})
+});
 
 const s3 = new S3({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-})
+});
 
 function uploadLogs(build, job, logs) {
   return new Promise((resolve, reject) => {
@@ -31,12 +31,12 @@ function uploadLogs(build, job, logs) {
       },
       (err) => {
         if (err) {
-          return reject(err)
+          return reject(err);
         }
-        return resolve()
+        return resolve();
       }
-    )
-  })
+    );
+  });
 }
 
 module.exports = async (job) => {
@@ -46,17 +46,17 @@ module.exports = async (job) => {
     } = await db.query(
       `select *, (select install_id from intramural_accounts acc where acc.id = owner) from intramural_repos where id = $1`,
       [job.data.repo]
-    )
-    let tag = ``
+    );
+    let tag = ``;
     if (job.data.meta.uses && job.data.meta.uses.node) {
-      tag += `Node ${job.data.meta.uses.node}`
+      tag += `Node ${job.data.meta.uses.node}`;
     }
     await db.query(
       `update intramural_jobs set status = $1, start_time = $2, tag = $3 where "id" = $4`,
       [`pending`, Date.now(), tag, job.data.id]
-    )
-    const script = await generateScript(repo, job.data, job.data.meta)
-    debug(`Starting #${job.data.build}.${job.data.job}`)
+    );
+    const script = await generateScript(repo, job.data, job.data.meta);
+    debug(`Starting #${job.data.build}.${job.data.job}`);
     const d = execa(
       `docker run -i --rm -m 2G --cpus 1 intramural/intramural:latest /bin/bash`,
       {
@@ -64,35 +64,35 @@ module.exports = async (job) => {
         shell: true,
         reject: false,
       }
-    )
-    let logs = ``
+    );
+    let logs = ``;
     d.all.on(`data`, (d) => {
-      const s = d.toString()
-      logs += s
-      redis.publish(`intramural:logs:${job.data.id}`, s)
-      redis.set(`intramural:logs:${job.data.id}`, logs)
-    })
-    const r = await d
+      const s = d.toString();
+      logs += s;
+      redis.publish(`intramural:logs:${job.data.id}`, s);
+      redis.set(`intramural:logs:${job.data.id}`, logs);
+    });
+    const r = await d;
     if (r.exitCode === 0) {
       await db.query(
         `update intramural_jobs set status = $1, end_time = $2 where "id" = $3`,
         [`success`, Date.now(), job.data.id]
-      )
+      );
     } else {
       await db.query(
         `update intramural_jobs set status = $1, end_time = $2 where "id" = $3`,
         [`error`, Date.now(), job.data.id]
-      )
+      );
     }
     debug(
       `Finished #${job.data.build}.${job.data.job}: ${r.exitCode} ${
         r.exitCodeName
       }`
-    )
-    debug(`Uploading Logs: ${job.data.build_id}/${job.data.id}`)
-    await uploadLogs(job.data.build_id, job.data.id, r.all)
-    redis.del(`logs:${job.data.id}`)
-    debug(`Uploaded Logs`)
+    );
+    debug(`Uploading Logs: ${job.data.build_id}/${job.data.id}`);
+    await uploadLogs(job.data.build_id, job.data.id, r.all);
+    redis.del(`logs:${job.data.id}`);
+    debug(`Uploaded Logs`);
     jobFinished.add(
       {
         build: job.data.build_id,
@@ -101,13 +101,13 @@ module.exports = async (job) => {
       {
         delay: 250 + Math.random() * 50,
       }
-    )
+    );
   } catch (e) {
-    console.log(e)
+    console.log(e);
     await db.query(
       `update intramural_jobs set status = $1, end_time = $2 where "id" = $3`,
       [`failure`, Date.now(), job.data.id]
-    )
+    );
     jobFinished.add(
       {
         build: job.data.build_id,
@@ -116,6 +116,6 @@ module.exports = async (job) => {
       {
         delay: 250 + Math.random() * 50,
       }
-    )
+    );
   }
-}
+};
