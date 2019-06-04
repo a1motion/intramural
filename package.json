@@ -48,7 +48,7 @@
     "smee-client": "^1.1.0"
   },
   "dependencies": {
-    "aws-sdk": "^2.466.0",
+    "aws-sdk": "^2.467.0",
     "babel-polyfill": "^6.26.0",
     "bull": "^3.10.0",
     "connect-redis": "^3.4.1",
