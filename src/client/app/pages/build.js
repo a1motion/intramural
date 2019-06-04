@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Link, Redirect } from "react-router-dom";
 import { css } from "linaria";
+import { Helmet } from "react-helmet";
 
 import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment";
 import SegmentGroup from "semantic-ui-react/dist/es/elements/Segment/SegmentGroup";
@@ -86,6 +87,11 @@ export default ({
   const [buildNum, setBuildNum] = useState(null);
   return (
     <Container>
+      <Helmet>
+        <title>
+          {`${buildNum !== null && `#${buildNum} `}${owner}/${repo}`}
+        </title>
+      </Helmet>
       <Breadcrumb>
         <BreadcrumbSection as={Link} to={`/${owner}`}>
           {owner}

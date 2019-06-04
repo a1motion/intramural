@@ -19,7 +19,9 @@ module.exports = async (_, req) => {
   if (cached_repos) {
     return cached_repos;
   }
-  const r = await getReposForUser(req.session.ACCESS_TOKEN);
+  const r = (await getReposForUser(req.session.ACCESS_TOKEN)).map(
+    (repo) => repo.id
+  );
   const { rows: repos } = await db.query(
     `SELECT * FROM intramural_repos WHERE id = ANY($1);`,
     [r]

@@ -9,6 +9,7 @@ import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/
 import Button from "semantic-ui-react/dist/es/elements/Button/Button";
 import ButtonContent from "semantic-ui-react/dist/es/elements/Button/ButtonContent";
 
+import { Helmet } from "react-helmet";
 import { Redirect, Link } from "react-router-dom";
 import Container from "../components/container";
 import { css } from "linaria";
@@ -146,6 +147,7 @@ const Builds = ({ loading, builds, owner, repo }) => {
 
 const GET_BUILDS = `query($fullName: String!) {
   repository(fullName: $fullName) {
+    hasWriteAccess
     builds {
       id
       num
@@ -166,43 +168,52 @@ export default ({
 }) => {
   return (
     <Container>
-      <div className={FlexBox}>
-        <Breadcrumb className={FlexGrow}>
-          <BreadcrumbSection as={Link} to={`/${owner}`}>
-            {owner}
-          </BreadcrumbSection>
-          <BreadcrumbDivider icon={`right chevron`} />
-          <BreadcrumbSection as={Link} to={`/${owner}/${repo}`}>
-            {repo}
-          </BreadcrumbSection>
-        </Breadcrumb>
-        <div className={FlexShrink}>
-          <Button
-            size={`tiny`}
-            compact
-            basic
-            animated
-            as={Link}
-            to={`/${owner}/${repo}/settings`}>
-            <ButtonContent visible>Settings</ButtonContent>
-            <ButtonContent hidden>
-              <Icon name={`settings`} />
-            </ButtonContent>
-          </Button>
-        </div>
-      </div>
       <Query query={GET_BUILDS} variables={{ fullName: `${owner}/${repo}` }}>
         {({ loading, error, data }) => {
           if (error) {
             return <div />;
           }
           return (
-            <Builds
-              builds={loading ? [] : data.repository.builds}
-              loading={loading}
-              owner={owner}
-              repo={repo}
-            />
+            <>
+              <Helmet>
+                <title>
+                  {owner}/{repo}
+                </title>
+              </Helmet>
+              <div className={FlexBox}>
+                <Breadcrumb className={FlexGrow}>
+                  <BreadcrumbSection as={Link} to={`/${owner}`}>
+                    {owner}
+                  </BreadcrumbSection>
+                  <BreadcrumbDivider icon={`right chevron`} />
+                  <BreadcrumbSection as={Link} to={`/${owner}/${repo}`}>
+                    {repo}
+                  </BreadcrumbSection>
+                </Breadcrumb>
+                {!loading && data.repository.hasWriteAccess && (
+                  <div className={FlexShrink}>
+                    <Button
+                      size={`tiny`}
+                      compact
+                      basic
+                      animated
+                      as={Link}
+                      to={`/${owner}/${repo}/settings`}>
+                      <ButtonContent visible>Settings</ButtonContent>
+                      <ButtonContent hidden>
+                        <Icon name={`settings`} />
+                      </ButtonContent>
+                    </Button>
+                  </div>
+                )}
+              </div>
+              <Builds
+                builds={loading ? [] : data.repository.builds}
+                loading={loading}
+                owner={owner}
+                repo={repo}
+              />
+            </>
           );
         }}
       </Query>

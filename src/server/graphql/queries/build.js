@@ -19,9 +19,9 @@ module.exports = async ({ id }, req) => {
   if (repo.private) {
     if (
       !req.session.ACCESS_TOKEN ||
-      !(await getReposForUser(req.session.ACCESS_TOKEN)).includes(
-        Number(repo.id)
-      )
+      !(await getReposForUser(req.session.ACCESS_TOKEN))
+        .map((repo) => repo.id)
+        .includes(Number(repo.id))
     ) {
       return null;
     }

@@ -6,9 +6,9 @@ module.exports = (repo, req) => {
   repo.builds = async () => {
     if (repo.private === true) {
       if (
-        !(await getReposForUser(req.session.ACCESS_TOKEN)).includes(
-          Number(repo.id)
-        )
+        !(await getReposForUser(req.session.ACCESS_TOKEN))
+          .map((repo) => repo.id)
+          .includes(Number(repo.id))
       ) {
         throw new Error(`No`);
       }

@@ -13,24 +13,22 @@ module.exports = async function getRepos(accessToken) {
       Accept: `application/vnd.github.machine-man-preview+json`,
     },
   });
-  const repos = []
-    .concat(
-      ...(await Promise.all(
-        installations.map(async (install) => {
-          const {
-            body: { repositories },
-          } = await got(`/user/installations/${install.id}/repositories`, {
-            token: accessToken,
-            headers: {
-              Accept: `application/vnd.github.machine-man-preview+json`,
-            },
-            json: true,
-          });
-          return repositories;
-        })
-      ))
-    )
-    .map((repo) => repo.id);
+  const repos = [].concat(
+    ...(await Promise.all(
+      installations.map(async (install) => {
+        const {
+          body: { repositories },
+        } = await got(`/user/installations/${install.id}/repositories`, {
+          token: accessToken,
+          headers: {
+            Accept: `application/vnd.github.machine-man-preview+json`,
+          },
+          json: true,
+        });
+        return repositories;
+      })
+    ))
+  );
   CACHE[accessToken] = {
     data: repos,
     expires: Date.now() + 1000 * 60 * 5,

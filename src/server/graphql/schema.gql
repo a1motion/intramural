@@ -50,6 +50,7 @@ type Repository implements Node {
   owner: Actor!
   lastBuild(branch: String = "master"): Build
   builds: [Build!]!
+  hasWriteAccess: Boolean!
 }
 
 type Query {

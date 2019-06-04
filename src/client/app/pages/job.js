@@ -7,6 +7,7 @@ import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/
 
 import { Link } from "react-router-dom";
 import { css } from "linaria";
+import { Helmet } from "react-helmet";
 
 import Container from "../components/container";
 import LoadingStack from "../components/LoadingStack";
@@ -126,6 +127,13 @@ export default ({
           </>
         )}
       </Breadcrumb>
+      <Helmet>
+        <title>
+          {`${
+            buildId && jobId ? `#${buildId.num}.${jobId.num} ` : ``
+          }${owner}/${repo}`}
+        </title>
+      </Helmet>
       <Query query={GET_JOB_QUERY} variables={{ jobId: job }}>
         {({ loading, data, error }) => {
           if (error) {
@@ -139,17 +147,22 @@ export default ({
           setBuild(job.build);
           if (job.status === `WAITING`) {
             return (
-              <Segment padded={`very`} loading className={PendingLogs} piled />
+              <Segment
+                padded={`very`}
+                loading
+                className={PendingLogs}
+                piled
+                color={`grey`}
+              />
             );
           }
           if (job.status === `PENDING`) {
-            return <RealTimeLogs initial={job.log} job={job.id} />;
+            return (
+              <RealTimeLogs initial={job.log} job={job.id} color={`yellow`} />
+            );
           }
           return (
-            <Segment
-              padded={`very`}
-              piled
-              color={getColorFromStatus(job.status)}>
+            <Segment padded={`very`} piled color={getColorFromStatus(job)}>
               <pre className={LogsWrapper}>
                 {(job.log || ``).split(`\n`).map((line, i) => (
                   <span key={i} className={LogsLine}>
