@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment";
 import Message from "semantic-ui-react/dist/es/collections/Message/Message";
-import Form from "semantic-ui-react/dist/es/collections/form/form";
+import Form from "semantic-ui-react/dist/es/collections/Form/Form";
 import Breadcrumb from "semantic-ui-react/dist/es/collections/Breadcrumb/Breadcrumb";
 import BreadcrumbDivider from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbDivider";
 import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbSection";
