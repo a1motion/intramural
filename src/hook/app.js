@@ -63,7 +63,8 @@ module.exports = (app) => {
     builds.add({
       repo: repository.id,
       branch: branch[2],
-      commit: after,
+      commit:
+        after === `0000000000000000000000000000000000000000` ? before : after,
       origin: `branch`,
     });
   });
