@@ -36,7 +36,7 @@
     "nodemon": "^1.19.1",
     "parcel-bundler": "^1.12.3",
     "parcel-plugin-linaria": "^0.1.1",
-    "prettier": "^1.17.1",
+    "prettier": "^1.18.2",
     "react": ">= 16.4.0 < 17",
     "react-dom": ">= 16.4.0 < 17",
     "react-redux": "^7.0.3",
