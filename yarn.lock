@@ -3652,7 +3652,8 @@ execa@^0.7.0:
 
 execa@^1.0.0, execa@sindresorhus/execa:
   version "1.0.0"
-  resolved "https://codeload.github.com/sindresorhus/execa/tar.gz/6fb284be38f6dc7e53250d4b8549598ab717143d"
+  uid a7b57d96bedecf78210b8284de968b2d7ebf881b
+  resolved "https://codeload.github.com/sindresorhus/execa/tar.gz/a7b57d96bedecf78210b8284de968b2d7ebf881b"
   dependencies:
     cross-spawn "^6.0.5"
     get-stream "^5.0.0"
