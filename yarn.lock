@@ -3652,14 +3652,15 @@ execa@^0.7.0:
 
 execa@^1.0.0, execa@sindresorhus/execa:
   version "1.0.0"
-  resolved "https://codeload.github.com/sindresorhus/execa/tar.gz/6fb284be38f6dc7e53250d4b8549598ab717143d"
+  uid bad2140aaadee04f052a32f0bdda226eb1afa447
+  resolved "https://codeload.github.com/sindresorhus/execa/tar.gz/bad2140aaadee04f052a32f0bdda226eb1afa447"
   dependencies:
     cross-spawn "^6.0.5"
     get-stream "^5.0.0"
     is-stream "^2.0.0"
     merge-stream "^2.0.0"
     npm-run-path "^3.0.0"
-    p-finally "^1.0.0"
+    p-finally "^2.0.0"
     signal-exit "^3.0.2"
     strip-final-newline "^2.0.0"
 
@@ -6483,6 +6484,11 @@ p-finally@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/p-finally/-/p-finally-1.0.0.tgz#3fbcfb15b899a44123b34b6dcc18b724336a2cae"
   integrity sha1-P7z7FbiZpEEjs0ttzBi3JDNqLK4=
+
+p-finally@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/p-finally/-/p-finally-2.0.0.tgz#b5bfd254f48358184552430fe55e968a83ccf593"
+  integrity sha512-Hh1x1SR9/Y5ndrziFD+dfB0N+chocV4uCmyzqshjN7fXj4kReUt5Fx+I50Eg9uUWml7g5gCYUzEHiselmnP3dg==
 
 p-is-promise@^2.0.0:
   version "2.1.0"
