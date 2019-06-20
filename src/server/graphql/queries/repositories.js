@@ -31,6 +31,20 @@ module.exports = async (_, req) => {
     attachOwner(repo);
     attachLastBuild(repo);
     attachBuilds(repo, req);
+    repo.hasWriteAccess = async () => {
+      const rs = await getReposForUser(req.session.ACCESS_TOKEN);
+      const r = rs.find((a) => a.id === Number(repo.id));
+      if (!r) {
+        return false;
+      }
+      return r.permissions.admin === true;
+    };
+    repo.environmentVariables = async () => {
+      if (!(await repo.hasWriteAccess())) {
+        return null;
+      }
+      return repo.environment_variables;
+    };
   });
   repoCache.set(req.session.ACCESS_TOKEN, repos);
   return repos;

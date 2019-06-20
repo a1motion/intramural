@@ -51,6 +51,7 @@ type Repository implements Node {
   lastBuild(branch: String = "master"): Build
   builds: [Build!]!
   hasWriteAccess: Boolean!
+  environmentVariables: String
 }
 
 type Query {

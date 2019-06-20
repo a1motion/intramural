@@ -26,5 +26,11 @@ module.exports = async ({ fullName }, req) => {
     }
     return r.permissions.admin === true;
   };
+  repo.environmentVariables = async () => {
+    if (!(await repo.hasWriteAccess())) {
+      return null;
+    }
+    return repo.environment_variables;
+  };
   return repo;
 };

@@ -27,7 +27,7 @@ redis.on(`pmessage`, (_, channel, message) => {
 });
 app.set(`trust proxy`, true);
 app.set(`x-powered-by`, false);
-
+app.use(express.json());
 app.use(logger(`dev`));
 
 require(`./auth`)(app);
@@ -38,8 +38,7 @@ app.use(`/g`, require(`../hook`));
 app.ws(`/ws`, require(`./ws`));
 
 app.use(`/api/me`, require(`./routes/me`));
-app.use(`/api/repos`, require(`./routes/repos`));
-app.use(`/api/builds`, require(`./routes/builds`));
+app.use(`/api/:owner/:repo/env`, require(`./routes/env`));
 app.use(`/badge`, require(`./routes/badge`));
 
 app.use(

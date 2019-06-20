@@ -1,3 +1,4 @@
+const dotenv = require(`dotenv`);
 module.exports = async (repo, build, job) => {
   let ACCESS_TOKEN = ``;
   if (repo.private) {
@@ -78,6 +79,9 @@ module.exports = async (repo, build, job) => {
     export PULL_REQUEST=${build.pull_request || `false`}
     `);
     script += `echo\n`;
+    script += generateEnv(dotenv.parse(repo.environment_variables), false);
+    script += `\necho\n`;
+    script += `echo\n`;
     script += generateEnv(job.env);
     script += `\necho\n`;
     script += align(`
@@ -128,11 +132,13 @@ function generateDeps(dep) {
   }
   return s;
 }
-function generateEnv(env) {
+function generateEnv(env, echo = true) {
   return Object.entries(env)
     .map(
       ([name, value]) =>
-        `echo "export ${name}=${value}"\nexport ${name}=${value}`
+        `${
+          echo ? `echo "export ${name}=${value}"\n` : ``
+        }export ${name}=${value}`
     )
     .join(`\n`);
 }
