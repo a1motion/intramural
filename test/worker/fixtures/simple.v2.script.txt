@@ -13,6 +13,9 @@ export PULL_REQUEST=false
 echo
 
 echo
+echo
+
+echo
 
 [[ -s $NVM_DIR/nvm.sh ]] && . $NVM_DIR/nvm.sh
 echo "$ git clone --depth=50 --branch=master https://github.com/a1motion/reware.git a1motion/reware"
