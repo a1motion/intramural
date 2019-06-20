@@ -79,7 +79,10 @@ module.exports = async (repo, build, job) => {
     export PULL_REQUEST=${build.pull_request || `false`}
     `);
     script += `echo\n`;
-    script += generateEnv(dotenv.parse(repo.environment_variables), false);
+    script += generateEnv(
+      dotenv.parse(repo.environment_variables || {}),
+      false
+    );
     script += `\necho\n`;
     script += `echo\n`;
     script += generateEnv(job.env);
