@@ -53,12 +53,9 @@ const deploy = async () => {
   const files = await getFilesInDir(`./build/client`);
   await files.map(async (file) => {
     let Key = path.relative(`./build/client`, file);
-    let Body = await readFile(file);
+    const Body = await readFile(file);
     if (Key.endsWith(`.map`)) {
       return false;
-    }
-    if (Key.endsWith(`.css`)) {
-      Body = Body.toString().replace(/\/\*[^*]*\*+([^/*][^*]*\*+)*\//, ``);
     }
     const CacheControl =
       Key === `index.html`
@@ -82,42 +79,9 @@ const deploy = async () => {
   });
 };
 
-const release = async () => {
-  const sentryCli = path.join(bin, `sentry-cli`);
-
-  const VERSION = require(`../package.json`).version;
-
-  await execa(`${sentryCli} releases new -p a1motion ${VERSION}`, {
-    shell: true,
-    env: process.env,
-  });
-  await execa(`${sentryCli} releases set-commits --auto ${VERSION}`, {
-    shell: true,
-    env: process.env,
-  });
-  const dur = Math.floor((Date.now() - start) / 1000);
-  await execa(
-    `${sentryCli} releases deploys ${VERSION} new -e production -t ${dur}`,
-    {
-      shell: true,
-      env: process.env,
-    }
-  );
-};
-
-const build = async () => {
-  const reactAppRewired = path.join(bin, `react-app-rewired`);
-  await execa(reactAppRewired, [`build`], {
-    shell: true,
-    env: { ...process.env, PUBLIC_URL: `https://cdn.a1motion.com/` },
-  });
-};
-
 const main = async () => {
   try {
-    //await build()
     await deploy();
-    //await release()
   } catch (e) {
     console.log();
     console.log(e);
