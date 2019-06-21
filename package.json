@@ -59,7 +59,7 @@
     "execa": "sindresorhus/execa",
     "express": "^4.17.1",
     "express-graphql": "^0.8.0",
-    "express-session": "^1.16.1",
+    "express-session": "^1.16.2",
     "express-ws": "^4.0.0",
     "gh-got": "^8.1.0",
     "got": "^9.6.0",
