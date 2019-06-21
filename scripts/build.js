@@ -68,7 +68,7 @@ const deploy = async () => {
     Key = Key.replace(/\\/g, `/`);
     Key = `mural/${Key}`;
     try {
-      return upload({
+      return await upload({
         Body,
         CacheControl,
         Key,
