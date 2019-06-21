@@ -67,14 +67,18 @@ const deploy = async () => {
     const Bucket = `public.a1motion.com`;
     Key = Key.replace(/\\/g, `/`);
     Key = `mural/${Key}`;
-    return upload({
-      Body,
-      CacheControl,
-      Key,
-      Bucket,
-      ContentLength: Body.length,
-      ContentType: contentType(file),
-    });
+    try {
+      return upload({
+        Body,
+        CacheControl,
+        Key,
+        Bucket,
+        ContentLength: Body.length,
+        ContentType: contentType(file),
+      });
+    } catch {
+      return null;
+    }
   });
 };
 
