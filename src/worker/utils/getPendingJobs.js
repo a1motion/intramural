@@ -13,9 +13,9 @@ const jobs = new Bull(`jobs`, {
 });
 
 module.exports = async () => {
-  const [pendingBuilds, pendingJobs] = await Promise.all(
+  const [pendingBuilds, pendingJobs] = await Promise.all([
     builds.getWaitingCount(),
-    jobs.getWaitingCount()
-  );
+    jobs.getWaitingCount(),
+  ]);
   return { pendingBuilds, pendingJobs };
 };
