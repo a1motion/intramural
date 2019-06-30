@@ -13,5 +13,6 @@ module.exports = (build) => {
     jobs = jobs.map(require(`../job/common`));
     return jobs;
   };
+
   return build;
 };

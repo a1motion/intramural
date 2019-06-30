@@ -11,11 +11,14 @@ function normalizeSteps(oldSteps) {
     } else {
       throw new Error(`Steps must be a string or an array of strings.`);
     }
+
     if (s.some((a) => typeof a !== `string`)) {
       throw new Error(`Currently only supporting simple bash scripts.`);
     }
+
     newSteps[key] = s;
   }
+
   return newSteps;
 }
 
@@ -24,6 +27,7 @@ module.exports = (doc) => {
   if (!config.version) {
     return undefined;
   }
+
   if (config.version === 1) {
     const c = {
       version: 1,
@@ -33,6 +37,7 @@ module.exports = (doc) => {
       if (!Array.isArray(config.node)) {
         config.node = [config.node];
       }
+
       config.node.forEach((version) => {
         c.jobs.push({
           version: 1,
@@ -41,8 +46,10 @@ module.exports = (doc) => {
         });
       });
     }
+
     return c;
   }
+
   if (config.version === 2) {
     const c = {
       version: 2,
@@ -78,5 +85,6 @@ module.exports = (doc) => {
     });
     return c;
   }
+
   return undefined;
 };

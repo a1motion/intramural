@@ -60,6 +60,7 @@ module.exports = (app) => {
     if (!branch || branch === null) {
       return;
     }
+
     builds.add({
       repo: repository.id,
       branch: branch[2],
@@ -78,12 +79,11 @@ module.exports = (app) => {
       } = pull_request;
       if (head_repo.full_name === base_repo.full_name) {
         debug(
-          `Pull Request ${head_repo.full_name}#${
-            pull_request.number
-          } skipped because it is also a branch. (${ref})`
+          `Pull Request ${head_repo.full_name}#${pull_request.number} skipped because it is also a branch. (${ref})`
         );
         return;
       }
+
       builds.add({
         repo: base_repo.id,
         branch: ref,
@@ -95,6 +95,7 @@ module.exports = (app) => {
     }
   );
 };
+
 async function createOrUpdateAccount(account, installation) {
   await db.query(
     `insert into intramural_accounts values ($1, $2, $3, $4${
@@ -111,6 +112,7 @@ async function createOrUpdateAccount(account, installation) {
     ].filter(Boolean)
   );
 }
+
 async function createOrUpdateRepos(account, repositories) {
   await Promise.all(
     repositories.map(async (repo) => {

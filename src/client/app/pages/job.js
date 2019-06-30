@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from "react";
-
 import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment";
 import Breadcrumb from "semantic-ui-react/dist/es/collections/Breadcrumb/Breadcrumb";
 import BreadcrumbDivider from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbDivider";
 import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbSection";
-
 import { Link } from "react-router-dom";
 import { css } from "linaria";
 import { Helmet } from "react-helmet";
-
 import Container from "../components/container";
 import LoadingStack from "../components/LoadingStack";
-
 import Query from "../utils/Query";
 import ws from "../utils/ws";
-
 import "semantic-ui-css/components/segment.min.css";
 import "semantic-ui-css/components/breadcrumb.min.css";
 import "semantic-ui-css/components/icon.min.css";
@@ -76,6 +71,7 @@ const RealTimeLogs = ({ initial, job }) => {
         setLogs(current);
       }
     };
+
     return () => {
       ws.send(JSON.stringify({ unsubscribe: `logs:${job}` }));
     };
@@ -84,6 +80,7 @@ const RealTimeLogs = ({ initial, job }) => {
     <Segment padded={`very`} piled color={`yellow`}>
       <pre className={LogsWrapper}>
         {(logs || ``).split(`\n`).map((line, i) => (
+          // eslint-disable-next-line react/no-array-index-key
           <span key={i} className={LogsLine}>
             {line}
           </span>
@@ -93,7 +90,7 @@ const RealTimeLogs = ({ initial, job }) => {
   );
 };
 
-export default ({
+const Job = ({
   match: {
     params: { owner, repo, job },
   },
@@ -139,9 +136,11 @@ export default ({
           if (error) {
             return <div />;
           }
+
           if (loading) {
             return <LoadingStack />;
           }
+
           const { job } = data;
           setJob(job);
           setBuild(job.build);
@@ -156,15 +155,18 @@ export default ({
               />
             );
           }
+
           if (job.status === `PENDING`) {
             return (
               <RealTimeLogs initial={job.log} job={job.id} color={`yellow`} />
             );
           }
+
           return (
             <Segment padded={`very`} piled color={getColorFromStatus(job)}>
               <pre className={LogsWrapper}>
                 {(job.log || ``).split(`\n`).map((line, i) => (
+                  // eslint-disable-next-line react/no-array-index-key
                   <span key={i} className={LogsLine}>
                     {line}
                   </span>
@@ -177,3 +179,5 @@ export default ({
     </Container>
   );
 };
+
+export default Job;

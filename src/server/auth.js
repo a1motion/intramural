@@ -28,6 +28,7 @@ module.exports = (app) => {
         if (req.session && req.session.uid) {
           return `${req.session.uid}:${nanoid(8)}`;
         }
+
         return nanoid(24);
       },
     })

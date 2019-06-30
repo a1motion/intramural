@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-
 import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment";
 import Image from "semantic-ui-react/dist/es/elements/Image/Image";
 import Dropdown from "semantic-ui-react/dist/es/modules/Dropdown/Dropdown";
@@ -12,11 +11,9 @@ import ButtonContent from "semantic-ui-react/dist/es/elements/Button/ButtonConte
 import Icon from "semantic-ui-react/dist/es/elements/Icon/Icon";
 import Loader from "semantic-ui-react/dist/es/elements/Loader/Loader";
 import Title from "semantic-ui-react/dist/es/elements/Header/Header";
-
 import { Link } from "react-router-dom";
 import { css } from "linaria";
 import { USER_LOGGED_IN, USER_LOGGED_OUT, USER_PENDING } from "../actions/user";
-
 import "semantic-ui-css/components/segment.min.css";
 import "semantic-ui-css/components/image.min.css";
 import "semantic-ui-css/components/dropdown.min.css";
@@ -53,6 +50,7 @@ const Login = () => {
     </Button>
   );
 };
+
 const User = ({ user }) => (
   <Dropdown
     icon={<Image src={user.image} size={`mini`} />}
@@ -76,6 +74,7 @@ function mapStateToProps(state) {
   const { user } = state;
   return { user };
 }
+
 const FlexBox = css`
   display: flex;
   align-items: center;
@@ -91,6 +90,7 @@ const DisableTextBlock = css`
     display: inline !important;
   }
 `;
+
 export const Header = connect(mapStateToProps)(({ user }) => (
   <Segment className={FlexBox}>
     <div className={FlexItem}>

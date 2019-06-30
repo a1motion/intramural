@@ -95,6 +95,7 @@ export const ReconnectingWebSocket = (() => {
             self.url
           );
         }
+
         timedOut = true;
         localWs.close();
         timedOut = false;
@@ -105,6 +106,7 @@ export const ReconnectingWebSocket = (() => {
         if (self.debug || ReconnectingWebSocket.debugAll) {
           console.debug(`ReconnectingWebSocket`, `onopen`, self.url);
         }
+
         self.protocol = ws.protocol;
         self.readyState = WebSocket.OPEN;
         self.reconnectAttempts = 0;
@@ -131,6 +133,7 @@ export const ReconnectingWebSocket = (() => {
             if (self.debug || ReconnectingWebSocket.debugAll) {
               console.debug(`ReconnectingWebSocket`, `onclose`, self.url);
             }
+
             eventTarget.dispatchEvent(generateEvent(`close`));
           }
 
@@ -148,6 +151,7 @@ export const ReconnectingWebSocket = (() => {
           );
         }
       };
+
       ws.onmessage = function(event) {
         if (self.debug || ReconnectingWebSocket.debugAll) {
           console.debug(
@@ -157,14 +161,17 @@ export const ReconnectingWebSocket = (() => {
             event.data
           );
         }
+
         const e = generateEvent(`message`);
         e.data = event.data;
         eventTarget.dispatchEvent(e);
       };
+
       ws.onerror = function(event) {
         if (self.debug || ReconnectingWebSocket.debugAll) {
           console.debug(`ReconnectingWebSocket`, `onerror`, self.url, event);
         }
+
         eventTarget.dispatchEvent(generateEvent(`error`));
       };
     };
@@ -184,8 +191,10 @@ export const ReconnectingWebSocket = (() => {
         if (self.debug || ReconnectingWebSocket.debugAll) {
           console.debug(`ReconnectingWebSocket`, `send`, self.url, data);
         }
+
         return ws.send(data);
       }
+
       throw `INVALID_STATE_ERR : Pausing to reconnect websocket`;
     };
 
@@ -198,6 +207,7 @@ export const ReconnectingWebSocket = (() => {
       if (typeof code === `undefined`) {
         code = 1000;
       }
+
       forcedClose = true;
       if (ws) {
         ws.close(code, reason);

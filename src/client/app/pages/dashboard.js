@@ -1,15 +1,12 @@
 import React from "react";
-
 import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment";
 import SegmentGroup from "semantic-ui-react/dist/es/elements/Segment/SegmentGroup";
 import Placeholder from "semantic-ui-react/dist/es/elements/Placeholder/Placeholder";
 import PlaceholderParagraph from "semantic-ui-react/dist/es/elements/Placeholder/PlaceholderParagraph";
 import PlaceholderLine from "semantic-ui-react/dist/es/elements/Placeholder/PlaceholderLine";
-
 import { Link } from "react-router-dom";
 import Container from "../components/container";
 import { css } from "linaria";
-
 import "semantic-ui-css/components/segment.min.css";
 import "semantic-ui-css/components/placeholder.min.css";
 import Query from "../utils/Query";
@@ -34,7 +31,7 @@ const GET_REPOS = `{
 }
 `;
 
-export default () => {
+const Dashboard = () => {
   return (
     <Container>
       <SegmentGroup stacked>
@@ -43,8 +40,10 @@ export default () => {
             if (error) {
               return <div />;
             }
+
             if (loading || !data) {
               return new Array(8).fill(0).map((_, i) => (
+                // eslint-disable-next-line react/no-array-index-key
                 <Segment key={i}>
                   <Placeholder>
                     <PlaceholderParagraph>
@@ -72,3 +71,5 @@ export default () => {
     </Container>
   );
 };
+
+export default Dashboard;

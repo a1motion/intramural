@@ -59,20 +59,21 @@ app.get(`/`, async (req, res) => {
       .status(400)
       .send(`${req.query.error}\n${req.query.error_description}`);
   }
+
   if (!req.query.code || !req.query.state) {
     const state = crypto.randomBytes(12).toString(`hex`);
     req.session.STATE = state;
     return req.session.save(() => {
       return res.redirect(
-        `https://github.com/login/oauth/authorize?client_id=${
-          process.env.GITHUB_CLIENT_ID
-        }&state=${state}`
+        `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&state=${state}`
       );
     });
   }
+
   if (req.query.state !== req.session.STATE) {
     return res.status(400).send(`State mismatch between requests.`);
   }
+
   let ACCESS_TOKEN;
   try {
     ACCESS_TOKEN = await getAccessTokenFromCode(
@@ -82,6 +83,7 @@ app.get(`/`, async (req, res) => {
   } catch (e) {
     res.status(400).send(e.message);
   }
+
   req.session.ACCESS_TOKEN = ACCESS_TOKEN;
   const USER = await getUser(ACCESS_TOKEN);
   req.session.USER = USER;
@@ -99,4 +101,5 @@ app.get(`/logout`, (req, res) => {
     )
   );
 });
+
 module.exports = app;

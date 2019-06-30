@@ -13,6 +13,7 @@ module.exports = async ({ fullName }, req) => {
   if (repos.length === 0) {
     return null;
   }
+
   const [repo] = repos;
   renameProperties(repo);
   attachOwner(repo);
@@ -24,13 +25,17 @@ module.exports = async ({ fullName }, req) => {
     if (!r) {
       return false;
     }
+
     return r.permissions.admin === true;
   };
+
   repo.environmentVariables = async () => {
     if (!(await repo.hasWriteAccess())) {
       return null;
     }
+
     return repo.environment_variables;
   };
+
   return repo;
 };

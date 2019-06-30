@@ -28,9 +28,7 @@ module.exports = async (
       description: [`error`, `failure`].includes(status)
         ? `Intramural build failed.`
         : `(${jobsMin}/${jobsMax})`,
-      target_url: `https://intramural.arcstatus.com/${
-        repo.full_name
-      }/builds/${build_id}`,
+      target_url: `https://intramural.arcstatus.com/${repo.full_name}/builds/${build_id}`,
     },
   });
 };

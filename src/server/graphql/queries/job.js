@@ -10,6 +10,7 @@ module.exports = async ({ id }, req) => {
   if (jobs.length === 0) {
     return null;
   }
+
   const [job] = jobs;
   const {
     rows: [repo],
@@ -26,6 +27,7 @@ module.exports = async ({ id }, req) => {
       return null;
     }
   }
+
   addJobProps(job);
   return job;
 };

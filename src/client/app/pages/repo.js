@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment";
 import SegmentGroup from "semantic-ui-react/dist/es/elements/Segment/SegmentGroup";
 import Icon from "semantic-ui-react/dist/es/elements/Icon/Icon";
@@ -8,17 +7,14 @@ import BreadcrumbDivider from "semantic-ui-react/dist/es/collections/Breadcrumb/
 import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbSection";
 import Button from "semantic-ui-react/dist/es/elements/Button/Button";
 import ButtonContent from "semantic-ui-react/dist/es/elements/Button/ButtonContent";
-
 import { Helmet } from "react-helmet";
 import { Redirect, Link } from "react-router-dom";
 import Container from "../components/container";
 import { css } from "linaria";
-
 import "semantic-ui-css/components/segment.min.css";
 import "semantic-ui-css/components/icon.min.css";
 import "semantic-ui-css/components/breadcrumb.min.css";
 import "semantic-ui-css/components/button.min.css";
-
 import Query from "../utils/Query";
 import { getColorFromStatus } from "../utils/getColorFromStatus";
 import LoadingStack from "../components/LoadingStack";
@@ -52,19 +48,24 @@ function getTimeSince(date) {
       Math.round(months) > 1 ? `s` : ``
     } ago`;
   }
+
   if (days >= 1) {
     return `${Math.round(days)} day${Math.round(days) > 1 ? `s` : ``} ago`;
   }
+
   if (hours >= 1) {
     return `${Math.round(hours)} hour${Math.round(hours) > 1 ? `s` : ``} ago`;
   }
+
   if (minutes >= 1) {
     return `${Math.round(minutes)} min${
       Math.round(minutes) > 1 ? `s` : ``
     } ago`;
   }
+
   return ``;
 }
+
 function getBuildTime(elasped) {
   let seconds = Math.floor(elasped / 1000);
   const hours = Math.floor(seconds / 3600);
@@ -96,9 +97,11 @@ const Builds = ({ loading, builds, owner, repo }) => {
       </SegmentGroup>
     );
   }
+
   if (builds.error) {
     return <Redirect to={`/`} />;
   }
+
   return (
     <SegmentGroup>
       {builds
@@ -106,6 +109,7 @@ const Builds = ({ loading, builds, owner, repo }) => {
           if (b.branch === `master`) {
             return 1000;
           }
+
           return -1;
         })
         .map((build) => (
@@ -173,6 +177,7 @@ export default ({
           if (error) {
             return <div />;
           }
+
           return (
             <>
               <Helmet>

@@ -26,6 +26,7 @@ const sendBadge = (branch) => async (req, res) => {
   if (repos.length === 0) {
     return res.type(`image/svg+xml`).send(BUILD_NOT_FOUND);
   }
+
   const [repo] = repos;
   const { rows: builds } = await db.query(
     `select * from intramural_builds where repo = $1 and branch = $2 order by id desc limit 1`,
@@ -34,6 +35,7 @@ const sendBadge = (branch) => async (req, res) => {
   if (builds.length === 0) {
     return res.type(`image/svg+xml`).send(BUILD_NOT_FOUND);
   }
+
   const [build] = builds;
   const { rows: jobs } = await db.query(
     `select * from intramural_jobs where repo = $1 and build = $2`,
@@ -43,12 +45,15 @@ const sendBadge = (branch) => async (req, res) => {
   if (jobs.some((j) => [`waiting`, `pending`].includes(j.status))) {
     status = `pending`;
   }
+
   if (status === `success`) {
     return res.type(`image/svg+xml`).send(BUILD_PASSING);
   }
+
   if ([`failure`, `error`].includes(status)) {
     return res.type(`image/svg+xml`).send(BUILD_FAILING);
   }
+
   return res.send(``);
 };
 

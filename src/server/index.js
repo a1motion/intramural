@@ -4,6 +4,7 @@ const express = require(`express`);
 const graphqlHTTP = require(`express-graphql`);
 const logger = require(`morgan`);
 const path = require(`path`);
+
 const redis = new (require(`ioredis`))({
   host: process.env.NODE_ENV === `development` ? `localhost` : `redis`,
 });
@@ -51,6 +52,7 @@ app.use(
 if (process.env.NODE_ENV === `development`) {
   app.use(express.static(path.join(__dirname, `../../build/client`)));
 }
+
 app.get(`*`, (req, res) => {
   res.sendFile(path.join(__dirname, `../../build/client/index.html`));
 });

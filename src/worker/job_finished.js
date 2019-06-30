@@ -34,6 +34,7 @@ module.exports = async (job) => {
     if (jobs.some((j) => [`waiting`, `pending`].includes(j.status))) {
       status = `pending`;
     }
+
     await sendGithubStatus(
       build_info.id,
       repo.id,

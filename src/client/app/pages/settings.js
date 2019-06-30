@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment";
 import Message from "semantic-ui-react/dist/es/collections/Message/Message";
 import Form from "semantic-ui-react/dist/es/collections/Form/Form";
@@ -8,17 +7,13 @@ import ButtonContent from "semantic-ui-react/dist/es/elements/Button/ButtonConte
 import Breadcrumb from "semantic-ui-react/dist/es/collections/Breadcrumb/Breadcrumb";
 import BreadcrumbDivider from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbDivider";
 import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbSection";
-
 import TextareaAutosize from "react-textarea-autosize";
 import { Link, Redirect } from "react-router-dom";
 import { css } from "linaria";
 import { Helmet } from "react-helmet";
-
 import Container from "../components/container";
 import LoadingStack from "../components/LoadingStack";
-
 import Query from "../utils/Query";
-
 import "semantic-ui-css/components/segment.min.css";
 import "semantic-ui-css/components/breadcrumb.min.css";
 import "semantic-ui-css/components/form.min.css";
@@ -61,6 +56,7 @@ const EnvironmentVariables = ({ current, owner, repo }) => {
     );
     setLoading(false);
   };
+
   return (
     <Segment attached>
       <Message>
@@ -84,6 +80,7 @@ const EnvironmentVariables = ({ current, owner, repo }) => {
     </Segment>
   );
 };
+
 export default ({
   match: {
     params: { owner, repo },
@@ -110,12 +107,15 @@ export default ({
           if (error) {
             return <div />;
           }
+
           if (loading) {
             return <LoadingStack />;
           }
+
           if (!data.repository.hasWriteAccess) {
             return <Redirect to={`/${owner}/${repo}`} />;
           }
+
           return (
             <div className={PADDED}>
               <div>

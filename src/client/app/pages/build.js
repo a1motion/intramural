@@ -1,25 +1,19 @@
 import React, { useState, useEffect } from "react";
-
 import { Link, Redirect } from "react-router-dom";
 import { css } from "linaria";
 import { Helmet } from "react-helmet";
-
 import Segment from "semantic-ui-react/dist/es/elements/Segment/Segment";
 import SegmentGroup from "semantic-ui-react/dist/es/elements/Segment/SegmentGroup";
 import Icon from "semantic-ui-react/dist/es/elements/Icon/Icon";
 import Breadcrumb from "semantic-ui-react/dist/es/collections/Breadcrumb/Breadcrumb";
 import BreadcrumbDivider from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbDivider";
 import BreadcrumbSection from "semantic-ui-react/dist/es/collections/Breadcrumb/BreadcrumbSection";
-
 import Container from "../components/container";
 import LoadingStack from "../components/LoadingStack";
-
 import Query from "../utils/Query";
-
 import "semantic-ui-css/components/segment.min.css";
 import "semantic-ui-css/components/icon.min.css";
 import "semantic-ui-css/components/breadcrumb.min.css";
-
 import { getColorFromStatus } from "../utils/getColorFromStatus";
 import { classnames } from "../utils/classnames";
 
@@ -117,15 +111,18 @@ export default ({
             if (error) {
               return <div />;
             }
+
             if (loading) {
               return <LoadingStack />;
             }
+
             const { build } = data;
             if (build.jobs && build.jobs.length === 1) {
               return (
                 <Redirect to={`/${owner}/${repo}/jobs/${build.jobs[0].id}`} />
               );
             }
+
             setBuildNum(build.num);
             return build.jobs.map((job) => (
               <Segment

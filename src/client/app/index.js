@@ -4,7 +4,6 @@ import ky from "ky";
 import { connect } from "react-redux";
 import { Header } from "./components/header";
 import { USER_PENDING, checkLogin } from "./actions/user";
-
 import "./index.css";
 import "semantic-ui-css/components/reset.min.css";
 import "semantic-ui-css/components/site.min.css";

@@ -1,5 +1,6 @@
 const execa = require(`execa`);
 const Bull = require(`bull`);
+
 const redis = new (require(`ioredis`))({
   host: process.env.NODE_ENV === `development` ? `localhost` : `redis`,
 });
@@ -33,6 +34,7 @@ function uploadLogs(build, job, logs) {
         if (err) {
           return reject(err);
         }
+
         return resolve();
       }
     );
@@ -51,6 +53,7 @@ module.exports = async (job) => {
     if (job.data.meta.uses && job.data.meta.uses.node) {
       tag += `Node ${job.data.meta.uses.node}`;
     }
+
     await db.query(
       `update intramural_jobs set status = $1, start_time = $2, tag = $3 where "id" = $4`,
       [`pending`, Date.now(), tag, job.data.id]
@@ -84,10 +87,9 @@ module.exports = async (job) => {
         [`error`, Date.now(), job.data.id]
       );
     }
+
     debug(
-      `Finished #${job.data.build}.${job.data.job}: ${r.exitCode} ${
-        r.exitCodeName
-      }`
+      `Finished #${job.data.build}.${job.data.job}: ${r.exitCode} ${r.exitCodeName}`
     );
     debug(`Uploading Logs: ${job.data.build_id}/${job.data.id}`);
     await uploadLogs(job.data.build_id, job.data.id, r.all);

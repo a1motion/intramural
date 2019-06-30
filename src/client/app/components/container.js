@@ -17,6 +17,8 @@ const container = css`
   }
 `;
 
-export default (props) => (
-  <div {...props} className={classnames(container, props.className)} />
+const Container = ({ className, ...props }) => (
+  <div {...props} className={classnames(container, className)} />
 );
+
+export default Container;

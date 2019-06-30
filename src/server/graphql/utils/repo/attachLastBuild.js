@@ -9,9 +9,11 @@ module.exports = (repo) => {
     if (builds.length === 0) {
       return null;
     }
+
     const [build] = builds;
     build.status = build.status.toUpperCase();
     return build;
   };
+
   return repo;
 };

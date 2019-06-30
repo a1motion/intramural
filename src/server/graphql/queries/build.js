@@ -10,6 +10,7 @@ module.exports = async ({ id }, req) => {
   if (builds.length === 0) {
     return null;
   }
+
   const [build] = builds;
   const {
     rows: [repo],
@@ -26,6 +27,7 @@ module.exports = async ({ id }, req) => {
       return null;
     }
   }
+
   addBuildProps(build);
   return build;
 };

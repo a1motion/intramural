@@ -15,10 +15,12 @@ module.exports = async (_, req) => {
   if (!req.session || !req.session.USER) {
     throw new Error(`Not Logged In`);
   }
+
   const cached_repos = repoCache.get(req.session.ACCESS_TOKEN);
   if (cached_repos) {
     return cached_repos;
   }
+
   const r = (await getReposForUser(req.session.ACCESS_TOKEN)).map(
     (repo) => repo.id
   );
@@ -37,12 +39,15 @@ module.exports = async (_, req) => {
       if (!r) {
         return false;
       }
+
       return r.permissions.admin === true;
     };
+
     repo.environmentVariables = async () => {
       if (!(await repo.hasWriteAccess())) {
         return null;
       }
+
       return repo.environment_variables;
     };
   });

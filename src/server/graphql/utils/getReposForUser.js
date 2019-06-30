@@ -1,9 +1,12 @@
 const got = require(`gh-got`);
+
 const CACHE = {};
+
 module.exports = async function getRepos(accessToken) {
   if (CACHE[accessToken] && CACHE[accessToken].expires > Date.now()) {
     return CACHE[accessToken].data;
   }
+
   const {
     body: { installations },
   } = await got(`/user/installations`, {

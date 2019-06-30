@@ -1,11 +1,14 @@
 const dotenv = require(`dotenv`);
+
 module.exports = async (repo, build, job) => {
   let ACCESS_TOKEN = ``;
   if (repo.private) {
     const getToken = require(`./getToken`);
     const getInstallToken = require(`./getInstallToken`);
+
     ACCESS_TOKEN = await getInstallToken(getToken(), repo.install_id);
   }
+
   if (job.version === 1) {
     const full_name = build.pull_request ? build.full_name : repo.full_name;
     let script = `
@@ -50,6 +53,7 @@ module.exports = async (repo, build, job) => {
     echo
     `;
     }
+
     job.steps.forEach((step) => {
       script += `
     echo "$ ${step}"
@@ -61,6 +65,7 @@ module.exports = async (repo, build, job) => {
     });
     return script;
   }
+
   if (job.version === 2) {
     const full_name = build.pull_request ? build.full_name : repo.full_name;
     let script = align(`
@@ -107,6 +112,7 @@ module.exports = async (repo, build, job) => {
     script += `echo\n`;
     return align(script);
   }
+
   return ``;
 };
 
@@ -120,8 +126,10 @@ function generateUses(uses) {
       `;
     }
   }
+
   return align(s);
 }
+
 function generateDeps(dep) {
   let s = ``;
   for (const [source, packages] of Object.entries(dep)) {
@@ -133,8 +141,10 @@ function generateDeps(dep) {
         .join(`\n`);
     }
   }
+
   return s;
 }
+
 function generateEnv(env, echo = true) {
   return Object.entries(env)
     .map(
@@ -145,6 +155,7 @@ function generateEnv(env, echo = true) {
     )
     .join(`\n`);
 }
+
 function generateSteps(steps) {
   return align(
     steps
@@ -157,16 +168,19 @@ function generateSteps(steps) {
       .join(`\n`)
   );
 }
+
 const align = (string) => {
   const min = Math.min(
     ...string.split(`\n`).map((s) => {
       if (s.length === 0) {
         return Number.MAX_SAFE_INTEGER;
       }
+
       const r = /^( *).*/.exec(s);
       if (r === null) {
         return 0;
       }
+
       return r[1].length;
     })
   );

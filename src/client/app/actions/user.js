@@ -10,6 +10,7 @@ export function checkLogin(data) {
       type: USER_LOGGED_OUT,
     };
   }
+
   return {
     type: USER_LOGGED_IN,
     payload: data,

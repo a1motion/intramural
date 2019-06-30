@@ -32,22 +32,20 @@ module.exports = async (job) => {
     );
     if (body.type !== `file`) {
       debug(
-        `${
-          repo.full_name
-        } does not have a .intramural.yml config file, skipping.`
+        `${repo.full_name} does not have a .intramural.yml config file, skipping.`
       );
       return;
     }
+
     config = Buffer.from(body.content, body.encoding).toString();
     config = parseConfig(config);
     if (!config) {
       debug(
-        `${
-          repo.full_name
-        } does not have a valid .intramural.yml config file, skipping.`
+        `${repo.full_name} does not have a valid .intramural.yml config file, skipping.`
       );
       return;
     }
+
     const { rows: old_builds } = await db.query(
       `select num from intramural_builds where repo = $1 order by num desc limit 1`,
       [repo.id]
@@ -58,6 +56,7 @@ module.exports = async (job) => {
     } else {
       build_id = Number.parseInt(old_builds[0].num, 10) + 1;
     }
+
     const {
       rows: [b],
     } = await db.query(

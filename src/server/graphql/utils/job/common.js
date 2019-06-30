@@ -1,5 +1,6 @@
 const { S3 } = require(`aws-sdk`);
 const db = require(`../../../db`);
+
 const redis = new (require(`ioredis`))({
   host: process.env.NODE_ENV === `development` ? `localhost` : `redis`,
 });
@@ -24,6 +25,7 @@ module.exports = (job) => {
     build = require(`../build/common`)(build);
     return build;
   };
+
   job.log = () => {
     return new Promise(async (resolve) => {
       const {
@@ -41,13 +43,16 @@ module.exports = (job) => {
           if (err && err.code === `NoSuchKey`) {
             return resolve(await redis.get(`intramural:logs:${job.id}`));
           }
+
           if (err) {
             return resolve(null);
           }
+
           return resolve(data.Body.toString());
         }
       );
     });
   };
+
   return job;
 };

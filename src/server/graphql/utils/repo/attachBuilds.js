@@ -13,6 +13,7 @@ module.exports = (repo, req) => {
         throw new Error(`No`);
       }
     }
+
     const { rows: builds } = await db.query(
       `select distinct on (branch) *, (select count(*) from intramural_builds t where t.branch = b.branch and repo = $1) as total_builds from intramural_builds b where repo = $1 order by branch, "id" desc`,
       [repo.id]
@@ -22,5 +23,6 @@ module.exports = (repo, req) => {
     });
     return builds;
   };
+
   return repo;
 };
