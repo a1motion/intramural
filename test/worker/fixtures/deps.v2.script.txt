@@ -8,6 +8,7 @@ sudo apt-get install -qqy -o=Dpkg::Use-Pty=0 libpng-dev > /dev/null
 echo
 
 export CI=true
+export FORCE_COLOR=3
 export NODE_ENV=test
 export PULL_REQUEST=false
 echo

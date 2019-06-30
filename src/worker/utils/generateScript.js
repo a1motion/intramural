@@ -80,6 +80,7 @@ module.exports = async (repo, build, job) => {
     script += `\necho\n`;
     script += align(`
     export CI=true
+    export FORCE_COLOR=3
     export NODE_ENV=test
     export PULL_REQUEST=${build.pull_request || `false`}
     `);
