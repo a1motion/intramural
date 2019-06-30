@@ -4,6 +4,7 @@ const express = require(`express`);
 const graphqlHTTP = require(`express-graphql`);
 const logger = require(`morgan`);
 const path = require(`path`);
+const getPendingJobs = require(`../worker/utils/getPendingJobs`);
 
 const redis = new (require(`ioredis`))({
   host: process.env.NODE_ENV === `development` ? `localhost` : `redis`,
@@ -53,6 +54,10 @@ if (process.env.NODE_ENV === `development`) {
   app.use(express.static(path.join(__dirname, `../../build/client`)));
 }
 
+app.get(`/meta`, async (req, res) => {
+  const { pendingBuilds, pendingJobs } = await getPendingJobs();
+  res.send(`Builds: ${pendingBuilds}\nJobs: ${pendingJobs}`);
+});
 app.get(`*`, (req, res) => {
   res.sendFile(path.join(__dirname, `../../build/client/index.html`));
 });
