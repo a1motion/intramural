@@ -1,20 +1,20 @@
 {
   "license": "MIT",
   "scripts": {
-    "dev:client": "parcel --out-dir build/client ./src/client/index.html",
+    "dev:client": "react-app-rewired start",
     "dev:worker": "nodemon --watch src/worker/ ./src/worker/index.js",
     "dev:server": "nodemon -e js,gql --watch src/server/ --watch src/hook/ ./src/server/index.js",
     "dev:redis": "redis-server",
     "dev": "run-p dev:*",
-    "clear": "rimraf build",
-    "build:client": "parcel build --out-dir build/client --public-url https://cdn.a1motion.com/mural ./src/client/index.html",
-    "build:hook": "cp -R ./src/hook ./build/hook",
-    "build:worker": "cp -R ./src/worker ./build/worker",
-    "build:server": "cp -R ./src/server ./build/server",
-    "build": "run-s clear build:*",
+    "clear": "rimraf lib",
+    "build:client": "PUBLIC_URL=https://cdn.a1motion.com/mural react-app-rewired build",
+    "build:hook": "cp -R ./src/hook ./lib/hook",
+    "build:worker": "cp -R ./src/worker ./lib/worker",
+    "build:server": "cp -R ./src/server ./lib/server",
+    "build": "yarn clear && mkdir -p ./lib && run-s build:*",
     "deploy": "node -r dotenv/config scripts/build.js",
-    "run:web": "node ./build/server",
-    "run:worker": "node ./build/worker",
+    "run:web": "node ./lib/server",
+    "run:worker": "node ./lib/worker",
     "test": "ava --verbose",
     "lint": "eslint --format=pretty 'src/**/*.js'"
   },
@@ -24,6 +24,7 @@
     "@babel/preset-react": "^7.0.0",
     "ava": "^2.1.0",
     "babel-eslint": "^10.0.2",
+    "customize-cra": "^0.2.14",
     "eslint": "^5.12.1",
     "eslint-config-a1motion": "2.1.2",
     "eslint-config-prettier": "^4.3.0",
@@ -38,16 +39,20 @@
     "parcel-plugin-linaria": "^0.1.1",
     "prettier": "^1.18.2",
     "react": ">= 16.4.0 < 17",
+    "react-app-rewired": "^2.1.3",
     "react-dom": ">= 16.4.0 < 17",
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
+    "react-scripts": "^3.0.1",
     "redux": "^4.0.1",
     "rimraf": "2.6.3",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.2",
-    "smee-client": "^1.1.0"
+    "smee-client": "^1.1.0",
+    "webpack-bundle-analyzer": "^3.3.2"
   },
   "dependencies": {
+    "@a1motion/color-code": "^1.0.0",
     "aws-sdk": "^2.480.0",
     "babel-polyfill": "^6.26.0",
     "bull": "^3.10.0",
@@ -85,5 +90,17 @@
         "configFile": false
       }
     }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

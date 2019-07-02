@@ -14,6 +14,7 @@ import "semantic-ui-css/components/segment.min.css";
 import "semantic-ui-css/components/breadcrumb.min.css";
 import "semantic-ui-css/components/icon.min.css";
 import { getColorFromStatus } from "../utils/getColorFromStatus";
+import colorCode from "@a1motion/color-code";
 
 const GET_JOB_QUERY = `query ($jobId: ID!){
   job(id: $jobId) {
@@ -32,26 +33,30 @@ const PendingLogs = css`
   min-height: 400px;
 `;
 
+const Black = css`
+  background-color: #000 !important;
+  padding: 0 3em !important;
+`;
+
 const LogsWrapper = css`
   counter-reset: line;
+  background-color: #000;
+  color: #fff;
+  margin: 0;
+  padding: 1em 0;
 `;
 const LogsLine = css`
   display: block;
   white-space: pre-wrap;
   word-break: break-word;
-  border-left: 1px solid #ddd;
-  border-top: 1px solid #eeeeeeee;
-  border-right: 1px solid #eeeeeeee;
-  &:last-of-type {
-    border-bottom: 1px solid #eeeeeeee;
-  }
   &:before {
     counter-increment: line;
     text-align: right;
     content: counter(line);
     display: inline-block;
     padding: 0 0.5em;
-    color: #888;
+    color: #ddd;
+    background-color: #333;
     min-width: 40px;
     margin-left: -40px;
     margin-right: 1em;
@@ -77,13 +82,16 @@ const RealTimeLogs = ({ initial, job }) => {
     };
   }, []);
   return (
-    <Segment padded={`very`} piled color={`yellow`}>
+    <Segment padded={`very`} className={Black}>
       <pre className={LogsWrapper}>
         {(logs || ``).split(`\n`).map((line, i) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <span key={i} className={LogsLine}>
-            {line}
-          </span>
+          <span
+            // eslint-disable-next-line react/no-array-index-key
+            key={i}
+            className={LogsLine}
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: colorCode(line) }}
+          />
         ))}
       </pre>
     </Segment>
@@ -163,13 +171,16 @@ const Job = ({
           }
 
           return (
-            <Segment padded={`very`} piled color={getColorFromStatus(job)}>
+            <Segment className={Black}>
               <pre className={LogsWrapper}>
                 {(job.log || ``).split(`\n`).map((line, i) => (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <span key={i} className={LogsLine}>
-                    {line}
-                  </span>
+                  <span
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={i}
+                    className={LogsLine}
+                    // eslint-disable-next-line react/no-danger
+                    dangerouslySetInnerHTML={{ __html: colorCode(line) }}
+                  />
                 ))}
               </pre>
             </Segment>
