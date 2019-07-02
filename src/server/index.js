@@ -1,6 +1,7 @@
 require(`dotenv`).config();
 
 const express = require(`express`);
+const aws = require(`aws-sdk`);
 const graphqlHTTP = require(`express-graphql`);
 const logger = require(`morgan`);
 const path = require(`path`);
@@ -8,6 +9,12 @@ const getPendingJobs = require(`../worker/utils/getPendingJobs`);
 
 const redis = new (require(`ioredis`))({
   host: process.env.NODE_ENV === `development` ? `localhost` : `redis`,
+});
+
+const s3 = new aws.S3({
+  region: `us-east-1`,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
 
 const app = express();
@@ -58,8 +65,32 @@ app.get(`/meta`, async (req, res) => {
   const { pendingBuilds, pendingJobs } = await getPendingJobs();
   res.send(`Builds: ${pendingBuilds}\nJobs: ${pendingJobs}`);
 });
-app.get(`*`, (req, res) => {
-  res.sendFile(path.join(__dirname, `../../build/client/index.html`));
+let CACHE = {};
+const getPage = async () => {
+  return new Promise((resolve) => {
+    s3.getObject(
+      {
+        Bucket: `public.a1motion.com`,
+        Key: `mural/index.html`,
+      },
+      (err, data) => {
+        const { Body } = data;
+        resolve(Body.toString());
+      }
+    );
+  });
+};
+
+app.get(`*`, async (req, res) => {
+  if (!(CACHE.expires && CACHE.expires > Date.now())) {
+    const data = await getPage();
+    CACHE = {
+      expires: Date.now() + 1000 * 60 * 5,
+      data,
+    };
+  }
+
+  return res.type(`html`).send(CACHE.data);
 });
 app.listen(9005);
 
