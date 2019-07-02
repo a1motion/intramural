@@ -73,7 +73,7 @@ const RealTime = ({ startTime }) => {
   return current;
 };
 
-export default ({
+const Build = ({
   match: {
     params: { build, owner, repo },
   },
@@ -153,3 +153,5 @@ export default ({
     </Container>
   );
 };
+
+export default Build;

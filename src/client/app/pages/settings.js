@@ -81,7 +81,7 @@ const EnvironmentVariables = ({ current, owner, repo }) => {
   );
 };
 
-export default ({
+const Settings = ({
   match: {
     params: { owner, repo },
   },
@@ -139,3 +139,5 @@ export default ({
     </Container>
   );
 };
+
+export default Settings;

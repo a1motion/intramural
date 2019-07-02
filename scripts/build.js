@@ -2,12 +2,8 @@ const aws = require('aws-sdk') //eslint-disable-line
 const fs = require(`fs`);
 const path = require(`path`);
 const mime = require(`mime`);
-const execa = require(`execa`);
+
 require(`dotenv`).config();
-
-const start = Date.now();
-
-const bin = path.join(__dirname, `..`, `node_modules`, `.bin`);
 
 const s3 = new aws.S3();
 function promisify(func, dir) {
@@ -16,10 +12,12 @@ function promisify(func, dir) {
       if (err) {
         return reject(err);
       }
+
       return resolve(data);
     });
   });
 }
+
 const lstat = (dir) => promisify(fs.lstat, dir);
 const readdir = (dir) => promisify(fs.readdir, dir);
 const readFile = (file) => promisify(fs.readFile, file);
@@ -31,6 +29,7 @@ function flattenDeep(arr) {
     []
   );
 }
+
 async function getFilesInDir(dir) {
   let files = await readdir(dir);
   files = files.map((file) => path.join(dir, file));
@@ -40,23 +39,26 @@ async function getFilesInDir(dir) {
       if (stats[i].isDirectory()) {
         return getFilesInDir(file);
       }
+
       return file;
     })
   );
   return flattenDeep(data);
 }
+
 function contentType(src, ext) {
   return (mime.getType(ext || src) || ``).replace(`-`, ``);
 }
 
 const deploy = async () => {
-  const files = await getFilesInDir(`./build/client`);
+  const files = await getFilesInDir(`./build`);
   await files.map(async (file) => {
-    let Key = path.relative(`./build/client`, file);
+    let Key = path.relative(`./build`, file);
     const Body = await readFile(file);
     if (Key.endsWith(`.map`)) {
       return false;
     }
+
     const CacheControl =
       Key === `index.html`
         ? `no-cache, no-store, must-revalidate`
@@ -87,4 +89,5 @@ const main = async () => {
     console.log(e);
   }
 };
+
 main();

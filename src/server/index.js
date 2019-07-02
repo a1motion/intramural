@@ -15,7 +15,7 @@ const expressWs = require(`express-ws`)(app);
 
 redis.psubscribe(`intramural:*`);
 redis.on(`pmessage`, (_, channel, message) => {
-  const [__, type, id] = channel.split(`:`);
+  const [, type, id] = channel.split(`:`);
   expressWs.getWss().clients.forEach((client) => {
     if (client.subscribed.some((subs) => subs[type] && subs[type] === id)) {
       client.send(

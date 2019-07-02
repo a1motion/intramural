@@ -165,7 +165,7 @@ const GET_BUILDS = `query($fullName: String!) {
   }
 }`;
 
-export default ({
+const Repo = ({
   match: {
     params: { owner, repo },
   },
@@ -225,3 +225,5 @@ export default ({
     </Container>
   );
 };
+
+export default Repo;

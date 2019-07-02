@@ -16,7 +16,7 @@
     "run:web": "node ./lib/server",
     "run:worker": "node ./lib/worker",
     "test": "ava --verbose",
-    "lint": "eslint --format=pretty 'src/**/*.js'"
+    "lint": "eslint --format=pretty '**/*.js'"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",

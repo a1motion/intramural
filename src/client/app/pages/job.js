@@ -13,7 +13,6 @@ import ws from "../utils/ws";
 import "semantic-ui-css/components/segment.min.css";
 import "semantic-ui-css/components/breadcrumb.min.css";
 import "semantic-ui-css/components/icon.min.css";
-import { getColorFromStatus } from "../utils/getColorFromStatus";
 import colorCode from "@a1motion/color-code";
 
 const GET_JOB_QUERY = `query ($jobId: ID!){

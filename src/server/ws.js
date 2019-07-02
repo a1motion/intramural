@@ -1,4 +1,4 @@
-module.exports = (ws, req) => {
+module.exports = (ws) => {
   ws.subscribed = [];
   ws.on(`message`, (msg) => {
     const data = JSON.parse(msg);
