@@ -20,7 +20,7 @@ ENV NODE_ENV production
 WORKDIR /var/app
 
 COPY package.json yarn.lock *.pem ./
-COPY build ./build
+COPY lib ./lib
 
 RUN yarn --frozen-lockfile
 
