@@ -14,6 +14,12 @@ const freshStart = new Bull(`fresh_start`, {
   },
 });
 
+const rerun = new Bull(`rerun_job`, {
+  redis: {
+    host: process.env.NODE_ENV === `development` ? `localhost` : `redis`,
+  },
+});
+
 const db = Pool({
   user: process.env.MAIN_DB_USER,
   host: process.env.MAIN_DB_HOST,
@@ -38,7 +44,7 @@ module.exports = (app) => {
       });
     });
   });
-  app.on([`installation_repositories.added`], async (context) => {
+  /*app.on([`installation_repositories.added`], async (context) => {
     const { installation, repositories_added } = context.payload;
     const { account } = installation;
     debug(
@@ -93,7 +99,31 @@ module.exports = (app) => {
         full_name: head_repo.full_name,
       });
     }
-  );
+  );*/
+  app.on([`check_suite.requested`], async (context) => {
+    const {
+      check_suite: { head_branch, head_sha, pull_requests },
+      repository: { id: repo_id, full_name },
+    } = context.payload;
+    builds.add({
+      repo: repo_id,
+      branch: head_branch,
+      commit: head_sha,
+      origin: pull_requests.length === 0 ? `branch` : `pr`,
+      pull_request:
+        pull_requests.length === 0 ? undefined : pull_requests[0].number,
+      full_name,
+    });
+  });
+  app.on([`check_run.rerequested`], async (context) => {
+    const {
+      check_run: { id, external_id },
+    } = context.payload;
+    rerun.add({
+      checkRunId: id,
+      id: external_id,
+    });
+  });
 };
 
 async function createOrUpdateAccount(account, installation) {

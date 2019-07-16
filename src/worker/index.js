@@ -26,6 +26,12 @@ const jobFinished = new Bull(`job_finished`, {
   },
 });
 
+const rerun = new Bull(`rerun_job`, {
+  redis: {
+    host: process.env.NODE_ENV === `development` ? `localhost` : `redis`,
+  },
+});
+
 freshStart.process(1, path.join(__dirname, `fresh_start.js`));
 builds.process(1, path.join(__dirname, `builds.js`));
 jobs.process(
@@ -35,3 +41,4 @@ jobs.process(
   path.join(__dirname, `jobs.js`)
 );
 jobFinished.process(1, path.join(__dirname, `job_finished.js`));
+rerun.process(1, path.join(__dirname, `rerun.js`));

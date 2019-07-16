@@ -67,6 +67,16 @@ module.exports = (doc) => {
         uses: { ...GLOBAL_USES, ...job.uses },
         deps: GLOBAL_DEPS,
       };
+      let name = [];
+      if (job.name) {
+        // eslint-disable-next-line prefer-destructuring
+        name.push(job.name);
+      } else if (job.uses && job.uses.node) {
+        name.push(`Node ${job.uses.node}`);
+      }
+
+      name = name.join(` `);
+      j.name = name;
       let s = [];
       job.steps = normalizeSteps({ $: job.steps }).$;
       job.steps.forEach((step) => {

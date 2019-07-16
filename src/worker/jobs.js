@@ -1,5 +1,9 @@
 const execa = require(`execa`);
 const Bull = require(`bull`);
+const got = require(`gh-got`);
+const colorCode = require(`@a1motion/color-code`);
+const getToken = require(`./utils/getToken`);
+const getInstallToken = require(`./utils/getInstallToken`);
 
 const redis = new (require(`ioredis`))({
   host: process.env.NODE_ENV === `development` ? `localhost` : `redis`,
@@ -49,19 +53,30 @@ module.exports = async (job) => {
       `select *, (select install_id from intramural_accounts acc where acc.id = owner) from intramural_repos where id = $1`,
       [job.data.repo]
     );
-    let tag = ``;
-    if (job.data.meta.uses && job.data.meta.uses.node) {
-      tag += `Node ${job.data.meta.uses.node}`;
-    }
 
+    let token = await getInstallToken(getToken(), repo.install_id);
+    await got.patch(
+      `repos/${repo.full_name}/check-runs/${job.data.checkRunId}`,
+      {
+        json: true,
+        body: {
+          started_at: new Date().toISOString(),
+          status: `in_progress`,
+        },
+        token,
+        headers: {
+          Accept: `application/vnd.github.antiope-preview+json`,
+        },
+      }
+    );
     await db.query(
       `update intramural_jobs set status = $1, start_time = $2, tag = $3 where "id" = $4`,
-      [`pending`, Date.now(), tag, job.data.id]
+      [`pending`, Date.now(), job.data.meta.name, job.data.id]
     );
     const script = await generateScript(repo, job.data, job.data.meta);
     debug(`Starting #${job.data.build}.${job.data.job}`);
     const d = execa(
-      `docker run -i --rm -m 2G --cpus 1 intramural/intramural:latest /bin/bash`,
+      `docker run -i --rm -m="4g" --memory-swap="6g" --cpus="1" intramural/intramural:latest /bin/bash`,
       {
         input: script,
         shell: true,
@@ -88,6 +103,29 @@ module.exports = async (job) => {
       );
     }
 
+    token = await getInstallToken(getToken(), repo.install_id);
+    await got.patch(
+      `repos/${repo.full_name}/check-runs/${job.data.checkRunId}`,
+      {
+        json: true,
+        body: {
+          completed_at: new Date().toISOString(),
+          conclusion: r.exitCode === 0 ? `success` : `failure`,
+          output: {
+            title:
+              r.exitCode === 0
+                ? `All Tests Passed`
+                : `One or More Tests Failed`,
+            summary: ``,
+            text: colorCode(logs, { noHtml: true }),
+          },
+        },
+        token,
+        headers: {
+          Accept: `application/vnd.github.antiope-preview+json`,
+        },
+      }
+    );
     debug(
       `Finished #${job.data.build}.${job.data.job}: ${r.exitCode} ${r.exitCodeName}`
     );

@@ -30,6 +30,7 @@ type Build implements Node {
   endTime: Time
   startTime: Time
   jobs: [Job!]!
+  pr: Int
 }
 type Job implements Node {
   id: ID!

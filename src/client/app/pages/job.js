@@ -14,6 +14,48 @@ import "semantic-ui-css/components/segment.min.css";
 import "semantic-ui-css/components/breadcrumb.min.css";
 import "semantic-ui-css/components/icon.min.css";
 import colorCode from "@a1motion/color-code";
+import { getColorFromStatus } from "../utils/getColorFromStatus";
+
+function getBuildTime(elasped) {
+  let seconds = Math.floor(elasped / 1000);
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  seconds %= 60;
+  return [
+    hours > 0 && `${hours} hour `,
+    minutes > 0 && `${minutes} min `,
+    `${seconds} sec`,
+  ].filter(Boolean);
+}
+
+function getTimeSince(date) {
+  const seconds = Math.floor((Date.now() - date) / 1000);
+  const minutes = seconds / 60;
+  const hours = minutes / 60;
+  const days = hours / 24;
+  const months = days / 30;
+  if (months >= 1) {
+    return `${Math.round(months)} month${
+      Math.round(months) > 1 ? `s` : ``
+    } ago`;
+  }
+
+  if (days >= 1) {
+    return `${Math.round(days)} day${Math.round(days) > 1 ? `s` : ``} ago`;
+  }
+
+  if (hours >= 1) {
+    return `${Math.round(hours)} hour${Math.round(hours) > 1 ? `s` : ``} ago`;
+  }
+
+  if (minutes >= 1) {
+    return `${Math.round(minutes)} min${
+      Math.round(minutes) > 1 ? `s` : ``
+    } ago`;
+  }
+
+  return ``;
+}
 
 const GET_JOB_QUERY = `query ($jobId: ID!){
   job(id: $jobId) {
@@ -21,9 +63,13 @@ const GET_JOB_QUERY = `query ($jobId: ID!){
     num
     log
     status
+    startTime
+    endTime
     build {
       id
       num
+      branch
+      pr
     }
   }
 }`;
@@ -61,7 +107,17 @@ const LogsLine = css`
     margin-right: 1em;
   }
 `;
-
+const FlexBox = css`
+  display: flex;
+  align-items: center;
+`;
+const Item = css`
+  margin: 8px 0;
+  font-size: 1.15rem;
+`;
+const FlexGrow = css`
+  flex: 1 1 auto;
+`;
 const RealTimeLogs = ({ initial, job }) => {
   const [logs, setLogs] = useState(initial);
   useEffect(() => {
@@ -95,6 +151,45 @@ const RealTimeLogs = ({ initial, job }) => {
       </pre>
     </Segment>
   );
+};
+
+const Logs = ({ job }) => {
+  if (job.status === `WAITING`) {
+    return (
+      <Segment
+        padded={`very`}
+        loading
+        className={PendingLogs}
+        piled
+        color={`grey`}
+      />
+    );
+  }
+
+  if (job.status === `PENDING`) {
+    return <RealTimeLogs initial={job.log} job={job.id} color={`yellow`} />;
+  }
+
+  return (
+    <Segment className={Black}>
+      <pre className={LogsWrapper}>
+        {(job.log || ``).split(`\n`).map((line, i) => (
+          <span
+            // eslint-disable-next-line react/no-array-index-key
+            key={i}
+            className={LogsLine}
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: colorCode(line) }}
+          />
+        ))}
+      </pre>
+    </Segment>
+  );
+};
+
+const COLORS = {
+  green: `#21ba45`,
+  red: `#db2828`,
 };
 
 const Job = ({
@@ -151,38 +246,27 @@ const Job = ({
           const { job } = data;
           setJob(job);
           setBuild(job.build);
-          if (job.status === `WAITING`) {
-            return (
-              <Segment
-                padded={`very`}
-                loading
-                className={PendingLogs}
-                piled
-                color={`grey`}
-              />
-            );
-          }
-
-          if (job.status === `PENDING`) {
-            return (
-              <RealTimeLogs initial={job.log} job={job.id} color={`yellow`} />
-            );
-          }
-
           return (
-            <Segment className={Black}>
-              <pre className={LogsWrapper}>
-                {(job.log || ``).split(`\n`).map((line, i) => (
-                  <span
-                    // eslint-disable-next-line react/no-array-index-key
-                    key={i}
-                    className={LogsLine}
-                    // eslint-disable-next-line react/no-danger
-                    dangerouslySetInnerHTML={{ __html: colorCode(line) }}
-                  />
-                ))}
-              </pre>
-            </Segment>
+            <>
+              <Segment color={getColorFromStatus(job)} className={FlexBox}>
+                <div className={FlexGrow}>
+                  <div
+                    className={Item}
+                    style={{ color: COLORS[getColorFromStatus(job)] }}>
+                    {job.build.branch}
+                  </div>
+                </div>
+                <div className={FlexGrow}>
+                  <div className={Item}>
+                    Ran for {getBuildTime(job.endTime - job.startTime)}
+                  </div>
+                  <div className={Item}>
+                    Started {getTimeSince(job.startTime)}
+                  </div>
+                </div>
+              </Segment>
+              <Logs job={job} />;
+            </>
           );
         }}
       </Query>

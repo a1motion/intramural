@@ -87,17 +87,31 @@ module.exports = async (job) => {
         const {
           rows: [t],
         } = await db.query(
-          `insert into intramural_jobs values (DEFAULT, $1, $2, $3, $4, $5, $6) returning * `,
-          [repo.id, build_id, i + 1, `Ubuntu 18.10`, ``, `waiting`]
+          `insert into intramural_jobs (repo, build, num, os, tag, status, config) values ($1, $2, $3, $4, $5, $6, $7) returning * `,
+          [repo.id, build_id, i + 1, `Ubuntu 18.10`, j.name, `waiting`, j]
         );
         debug(`Created #${build_id}.${i + 1}`);
-        pJobs.add({
+        const { body } = await got.post(`repos/${repo.full_name}/check-runs`, {
+          json: true,
+          body: {
+            name: `[intramural] ${j.name}`,
+            head_sha: job.data.commit,
+            details_url: `https://intramural.arcstatus.com/${repo.full_name}/jobs/${t.id}`,
+            external_id: t.id,
+          },
+          headers: {
+            Accept: `application/vnd.github.antiope-preview+json`,
+          },
+          token,
+        });
+        await pJobs.add({
           ...job.data,
           id: t.id,
           build: build_id,
           build_id: b.id,
           job: i + 1,
           meta: j,
+          checkRunId: body.id,
         });
       })
     );

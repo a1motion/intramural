@@ -88,7 +88,7 @@ app.get(`/`, async (req, res) => {
   const USER = await getUser(ACCESS_TOKEN);
   req.session.USER = USER;
   return res.redirect(
-    process.env.NODE_ENV === `development` ? `http://localhost:1234` : `/`
+    process.env.NODE_ENV === `development` ? `http://localhost:3000` : `/`
   );
 });
 
@@ -97,7 +97,7 @@ app.get(`/logout`, (req, res) => {
   delete req.session.USER;
   return req.session.save(() =>
     res.redirect(
-      process.env.NODE_ENV === `development` ? `http://localhost:1234` : `/`
+      process.env.NODE_ENV === `development` ? `http://localhost:3000` : `/`
     )
   );
 });

@@ -15,6 +15,26 @@ test(`simple`, async (t) => {
         version: 2,
         deps: {},
         env: {},
+        name: `Node 10`,
+        uses: {
+          node: 10,
+        },
+        steps: [`yarn`],
+      },
+    ],
+  });
+});
+
+test(`named jobs`, async (t) => {
+  const c = parseConfig(await getFixtures(`namedJobs.v2.config.yml`));
+  t.deepEqual(c, {
+    version: 2,
+    jobs: [
+      {
+        version: 2,
+        deps: {},
+        env: {},
+        name: `Test Name`,
         uses: {
           node: 10,
         },
