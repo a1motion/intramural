@@ -117,7 +117,7 @@ module.exports = async (job) => {
                 ? `All Tests Passed`
                 : `One or More Tests Failed`,
             summary: ``,
-            text: colorCode(logs, { noHtml: true }),
+            text: `\`\`\`\n${colorCode(logs, { noHtml: true })}\n\`\`\``,
           },
         },
         token,
