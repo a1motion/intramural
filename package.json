@@ -52,7 +52,7 @@
     "webpack-bundle-analyzer": "^3.3.2"
   },
   "dependencies": {
-    "@a1motion/color-code": "^1.1.0",
+    "@a1motion/color-code": "^1.1.1",
     "@hot-loader/react-dom": "^16.8.6",
     "aws-sdk": "^2.480.0",
     "babel-polyfill": "^6.26.0",
