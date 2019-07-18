@@ -4904,10 +4904,10 @@ escodegen@~1.9.0:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-config-a1motion@2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/eslint-config-a1motion/-/eslint-config-a1motion-2.1.2.tgz#1a412f1c9f08ab23aa96f751bc6c3dcd875b2425"
-  integrity sha512-TZcZo7mK/xMAkbtZoCHVMXKcWLCTF5MvSU7RQ4mJI05SJkeDzLDBSs8kMC59wCZ3bV2VLfx3QDfqWTftBy6nAw==
+eslint-config-a1motion@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-a1motion/-/eslint-config-a1motion-2.2.1.tgz#5f9b31976e219123539b78550ff7d7aba99a5f07"
+  integrity sha512-Mhpoh1ksEuxHaxGO8/FFxWXyySwkZAzMshcN4gMm/6+fYzjDTAxEdCpIM+MgUiclckpqC2g9m1eDeWuaYUSC4A==
 
 eslint-config-prettier@^4.3.0:
   version "4.3.0"
