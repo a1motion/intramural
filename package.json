@@ -82,7 +82,7 @@
     "physical-cpu-count": "^2.0.0",
     "probot": "^9.2.19",
     "react-helmet": "^5.2.1",
-    "react-hot-loader": "^4.12.6",
+    "react-hot-loader": "^4.12.8",
     "react-textarea-autosize": "^7.1.0"
   },
   "ava": {
