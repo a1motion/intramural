@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@a1motion/color-code@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@a1motion/color-code/-/color-code-1.1.0.tgz#e9f9b17b3a3b639b470819b3efd6df246a74e2a6"
-  integrity sha512-UDVJ6AzFrOrzdRDvV4m8Cx0Z4Nhfi/ZDEV1gcMPn8kuSH+tDEuT4W2jEmXADyl4IB2wSmVBnrUZHcOQ9uVbUEQ==
+"@a1motion/color-code@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@a1motion/color-code/-/color-code-1.1.2.tgz#a4edd5387b649b17e6abbb07df97e843d2bc11b1"
+  integrity sha512-8BhC4djOlNOxt0W2YD0+cTg612UBMoDQdl8vOCF3qdcDxTEJ8YnXPVz58dDy/MmKEkXjgUQSr/MXP8GsVHgG2w==
   dependencies:
     escape-html "^1.0.3"
 

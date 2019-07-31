@@ -14,14 +14,11 @@ const genScript = (t) =>
     },
     t
   );
-const getFixtures = async (f) =>
-  (await fs.readFile(join(__dirname, `..`, `fixtures`, f))).toString();
-
 test(`simple`, async (t) => {
   const s = await genScript({
     version: 1,
     node: 10,
     steps: [`yarn test`],
   });
-  t.is(s, await getFixtures(`simple.v1.script.txt`));
+  t.snapshot(s);
 });

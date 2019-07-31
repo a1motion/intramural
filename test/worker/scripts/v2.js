@@ -20,9 +20,6 @@ const genScript = async (t) => {
   return s;
 };
 
-const getFixtures = async (f) =>
-  (await fs.readFile(join(__dirname, `..`, `fixtures`, f))).toString();
-
 test(`simple`, async (t) => {
   const s = await genScript({
     version: 2,
@@ -33,7 +30,7 @@ test(`simple`, async (t) => {
     },
     steps: [`yarn test`],
   });
-  t.is(s, await getFixtures(`simple.v2.script.txt`));
+  t.snapshot(s);
 });
 
 test(`should add apt deps`, async (t) => {
@@ -48,5 +45,21 @@ test(`should add apt deps`, async (t) => {
     },
     steps: [`yarn test`],
   });
-  t.is(s, await getFixtures(`deps.v2.script.txt`));
+  t.snapshot(s);
+});
+
+test(`should add env var`, async (t) => {
+  const s = await genScript({
+    version: 2,
+    deps: {},
+    env: {
+      TEST_ENV: true,
+    },
+    name: `Node 10`,
+    uses: {
+      node: 10,
+    },
+    steps: [`yarn test`],
+  });
+  t.snapshot(s);
 });

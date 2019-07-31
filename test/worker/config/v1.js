@@ -4,7 +4,9 @@ import { join } from "path";
 import parseConfig from "../../../src/worker/utils/parseConfig";
 
 const getFixtures = async (f) =>
-  (await fs.readFile(join(__dirname, `..`, `fixtures`, f))).toString();
+  (await fs.readFile(
+    join(__dirname, `..`, `fixtures`, `config`, f)
+  )).toString();
 
 test(`simple`, async (t) => {
   const c = parseConfig(await getFixtures(`simple.v1.config.yml`));

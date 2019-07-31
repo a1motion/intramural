@@ -75,22 +75,21 @@ module.exports = async (repo, build, job) => {
     echo "Startup:\t$(echo $(($(date +%s%3N) - ${Date.now()})))ms"
     echo
     `);
-    script += `echo\n`;
+    script += `echo\n#deps\n`;
     script += generateDeps(job.deps);
-    script += `\necho\n`;
+    script += `\necho\n#internal-env\n`;
     script += align(`
     export CI=true
     export FORCE_COLOR=3
     export NODE_ENV=test
     export PULL_REQUEST=${build.pull_request || `false`}
     `);
-    script += `echo\n`;
+    script += `echo\n#repo-env\n`;
     script += generateEnv(
       dotenv.parse(repo.environment_variables || {}),
       false
     );
-    script += `\necho\n`;
-    script += `echo\n`;
+    script += `\necho\n#env\n`;
     script += generateEnv(job.env);
     script += `\necho\n`;
     script += align(`
@@ -123,7 +122,7 @@ function generateUses(uses) {
     if (name === `node`) {
       s += `
       echo "$ nvm install ${version}"
-      nvm install ${version}
+      nvm install --no-progress ${version}
       `;
     }
   }
