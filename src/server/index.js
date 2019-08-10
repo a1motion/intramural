@@ -82,6 +82,10 @@ const getPage = async () => {
 };
 
 app.get(`*`, async (req, res) => {
+  if (!req.user) {
+    return res.redirect(`/g?r=${encodeURIComponent(req.url)}`);
+  }
+
   if (!(CACHE.expires && CACHE.expires > Date.now())) {
     const data = await getPage();
     CACHE = {

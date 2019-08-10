@@ -5,7 +5,6 @@ const db = require(`../server/db`);
 const getToken = require(`./utils/getToken`);
 const getInstallToken = require(`./utils/getInstallToken`);
 const parseConfig = require(`./utils/parseConfig`);
-const sendGithubStatus = require(`./utils/sendGithubStatus`);
 
 const pJobs = new Bull(`jobs`, {
   redis: {
@@ -73,15 +72,6 @@ module.exports = async (job) => {
       ]
     );
     debug(`Starting build #${build_id} (${b.id}) for ${repo.full_name}`);
-    await sendGithubStatus(
-      b.id,
-      repo.id,
-      job.data.origin,
-      job.data.commit,
-      `pending`,
-      0,
-      config.jobs.length
-    );
     await Promise.all(
       config.jobs.map(async (j, i) => {
         const {

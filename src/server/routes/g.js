@@ -63,6 +63,7 @@ app.get(`/`, async (req, res) => {
   if (!req.query.code || !req.query.state) {
     const state = crypto.randomBytes(12).toString(`hex`);
     req.session.STATE = state;
+    req.session.r = req.query.r;
     return req.session.save(() => {
       return res.redirect(
         `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&state=${state}`
@@ -88,7 +89,11 @@ app.get(`/`, async (req, res) => {
   const USER = await getUser(ACCESS_TOKEN);
   req.session.USER = USER;
   return res.redirect(
-    process.env.NODE_ENV === `development` ? `http://localhost:3000` : `/`
+    req.session.r
+      ? req.session.r
+      : process.env.NODE_ENV === `development`
+      ? `http://localhost:3000`
+      : `/`
   );
 });
 

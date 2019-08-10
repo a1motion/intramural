@@ -1,5 +1,4 @@
 const db = require(`../server/db`);
-const sendGithubStatus = require(`./utils/sendGithubStatus`);
 
 const STATUSES = {
   0: `waiting`,
@@ -35,15 +34,6 @@ module.exports = async (job) => {
       status = `pending`;
     }
 
-    await sendGithubStatus(
-      build_info.id,
-      repo.id,
-      build_info.origin,
-      build_info.commit,
-      status,
-      jobs.filter((j) => j.status === `success`).length,
-      jobs.length
-    );
     if (jobs.every((j) => [`failure`, `error`, `success`].includes(j.status))) {
       await db.query(
         `update intramural_builds set end_time = $1, status = $2 where "id" = $3`,

@@ -74,7 +74,7 @@ module.exports = async (job) => {
       [`pending`, Date.now(), job.data.meta.name, job.data.id]
     );
     const script = await generateScript(repo, job.data, job.data.meta);
-    debug(`Starting #${job.data.build}.${job.data.job}`);
+    debug(`Starting #${job.data.build}.${job.data.job} (${repo.full_name})`);
     const d = execa(
       `docker run -i --rm -m="4g" --memory-swap="6g" --cpus="1" intramural/intramural:latest /bin/bash`,
       {
@@ -117,7 +117,10 @@ module.exports = async (job) => {
                 ? `All Tests Passed`
                 : `One or More Tests Failed`,
             summary: ``,
-            text: `\`\`\`\n${colorCode(logs, { noHtml: true })}\n\`\`\``,
+            text:
+              colorCode(logs, { noHtml: true }).length > 65000
+                ? `Logs are too long to display on Github.\nVist [#${job.data.job}](https://intramural.arcstatus.com/${repo.full_name}/jobs/${job.data.id})`
+                : `\`\`\`\n${colorCode(logs, { noHtml: true })}\n\`\`\``,
           },
         },
         token,
@@ -127,12 +130,16 @@ module.exports = async (job) => {
       }
     );
     debug(
-      `Finished #${job.data.build}.${job.data.job}: ${r.exitCode} ${r.exitCodeName}`
+      `Finished #${job.data.build}.${job.data.job} (${repo.full_name}): ${r.exitCode} ${r.exitCodeName}`
     );
-    debug(`Uploading Logs: ${job.data.build_id}/${job.data.id}`);
+    debug(
+      `Uploading Logs: ${job.data.build_id}/${job.data.id} (${repo.full_name})`
+    );
     await uploadLogs(job.data.build_id, job.data.id, r.all);
     redis.del(`logs:${job.data.id}`);
-    debug(`Uploaded Logs`);
+    debug(
+      `Uploaded Logs ${job.data.build_id}/${job.data.id} (${repo.full_name})`
+    );
     jobFinished.add(
       {
         build: job.data.build_id,
