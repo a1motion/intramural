@@ -54,6 +54,12 @@ const getUser = async (accessToken) => {
 };
 
 app.get(`/`, async (req, res) => {
+  if (req.session.USER) {
+    return res.redirect(
+      process.env.NODE_ENV === `development` ? `http://localhost:3000` : `/`
+    );
+  }
+
   if (req.query.error) {
     return res
       .status(400)
