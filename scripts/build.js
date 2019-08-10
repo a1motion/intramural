@@ -55,10 +55,6 @@ const deploy = async () => {
   await files.map(async (file) => {
     let Key = path.relative(`./build`, file);
     const Body = await readFile(file);
-    if (Key.endsWith(`.map`)) {
-      return false;
-    }
-
     const CacheControl =
       Key === `index.html`
         ? `no-cache, no-store, must-revalidate`

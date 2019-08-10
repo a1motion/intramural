@@ -7,6 +7,7 @@ const {
   addWebpackPlugin,
   addBabelPlugins,
   addWebpackAlias,
+  addBabelPreset,
 } = require(`customize-cra`);
 const { version } = require(`./package.json`);
 
@@ -48,6 +49,7 @@ module.exports = {
           __RELEASE__: JSON.stringify(version),
         })
       ),
+      addBabelPreset(`linaria/babel`),
       addBabelPlugins(`react-hot-loader/babel`),
       addWebpackAlias({
         "react-dom": `@hot-loader/react-dom`,
