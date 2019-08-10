@@ -46,7 +46,7 @@
     "smee-client": "^1.1.0",
     "webpack-bundle-analyzer": "^3.4.1",
     "react-helmet": "^5.2.1",
-    "react-hot-loader": "^4.12.8",
+    "react-hot-loader": "^4.12.10",
     "react-textarea-autosize": "^7.1.0",
     "@hot-loader/react-dom": "^16.8.6"
   },
