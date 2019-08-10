@@ -8,11 +8,17 @@ import "./index.css";
 import "semantic-ui-css/components/reset.min.css";
 import "semantic-ui-css/components/site.min.css";
 
-const Dashboard = lazy(() => import(`./pages/dashboard`));
-const Repo = lazy(() => import(`./pages/repo`));
-const Build = lazy(() => import(`./pages/build`));
-const Job = lazy(() => import(`./pages/job`));
-const Settings = lazy(() => import(`./pages/settings`));
+const Dashboard = lazy(() =>
+  import(/* webpackChunkName: "dashboard" */ `./pages/dashboard`)
+);
+const Repo = lazy(() => import(/* webpackChunkName: "repo" */ `./pages/repo`));
+const Build = lazy(() =>
+  import(/* webpackChunkName: "build" */ `./pages/build`)
+);
+const Job = lazy(() => import(/* webpackChunkName: "job" */ `./pages/job`));
+const Settings = lazy(() =>
+  import(/* webpackChunkName: "settings" */ `./pages/settings`)
+);
 
 function mapStateToProps(state) {
   const { user } = state;
