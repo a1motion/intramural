@@ -88,12 +88,10 @@ app.get(`/`, async (req, res) => {
   req.session.ACCESS_TOKEN = ACCESS_TOKEN;
   const USER = await getUser(ACCESS_TOKEN);
   req.session.USER = USER;
+  const r = req.session.r || `/`;
+  delete req.session.r;
   return res.redirect(
-    req.session.r
-      ? req.session.r
-      : process.env.NODE_ENV === `development`
-      ? `http://localhost:3000`
-      : `/`
+    process.env.NODE_ENV === `development` ? `http://localhost:3000${r}` : r
   );
 });
 
