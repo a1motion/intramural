@@ -88,11 +88,13 @@ app.get(`/`, async (req, res) => {
   req.session.ACCESS_TOKEN = ACCESS_TOKEN;
   const USER = await getUser(ACCESS_TOKEN);
   req.session.USER = USER;
-  const r = req.session.r || `/`;
+  const r = decodeURIComponent(req.session.r || `/`);
   delete req.session.r;
-  return res.redirect(
-    process.env.NODE_ENV === `development` ? `http://localhost:3000${r}` : r
-  );
+  return req.session.save(() => {
+    return res.redirect(
+      process.env.NODE_ENV === `development` ? `http://localhost:3000${r}` : r
+    );
+  });
 });
 
 app.get(`/logout`, (req, res) => {
