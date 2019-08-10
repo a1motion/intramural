@@ -87,7 +87,7 @@ const getPage = async () => {
 };
 
 app.get(`*`, async (req, res) => {
-  if (!req.user) {
+  if (!req.session.USER) {
     return res.redirect(`/g?r=${encodeURIComponent(req.url)}`);
   }
 
