@@ -2,6 +2,7 @@ const execa = require(`execa`);
 const Bull = require(`bull`);
 const got = require(`gh-got`);
 const colorCode = require(`@a1motion/color-code`);
+const Sentry = require(`@sentry/node`);
 const getToken = require(`./utils/getToken`);
 const getInstallToken = require(`./utils/getInstallToken`);
 
@@ -46,15 +47,14 @@ function uploadLogs(build, job, logs) {
 }
 
 module.exports = async (job) => {
+  const {
+    rows: [repo],
+  } = await db.query(
+    `select *, (select install_id from intramural_accounts acc where acc.id = owner) from intramural_repos where id = $1`,
+    [job.data.repo]
+  );
+  let token = await getInstallToken(getToken(), repo.install_id);
   try {
-    const {
-      rows: [repo],
-    } = await db.query(
-      `select *, (select install_id from intramural_accounts acc where acc.id = owner) from intramural_repos where id = $1`,
-      [job.data.repo]
-    );
-
-    let token = await getInstallToken(getToken(), repo.install_id);
     await got.patch(
       `repos/${repo.full_name}/check-runs/${job.data.checkRunId}`,
       {
@@ -150,10 +150,28 @@ module.exports = async (job) => {
       }
     );
   } catch (e) {
-    console.log(e);
+    Sentry.captureException(e);
     await db.query(
       `update intramural_jobs set status = $1, end_time = $2 where "id" = $3`,
       [`failure`, Date.now(), job.data.id]
+    );
+    await got.patch(
+      `repos/${repo.full_name}/check-runs/${job.data.checkRunId}`,
+      {
+        json: true,
+        body: {
+          completed_at: new Date().toISOString(),
+          conclusion: `failure`,
+          output: {
+            title: `Internal Failure`,
+            summary: `There was an error on our end.`,
+          },
+        },
+        token,
+        headers: {
+          Accept: `application/vnd.github.antiope-preview+json`,
+        },
+      }
     );
     jobFinished.add(
       {

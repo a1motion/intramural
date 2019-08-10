@@ -1,6 +1,11 @@
 require(`dotenv`).config();
 const path = require(`path`);
 const Bull = require(`bull`);
+const Sentry = require(`@sentry/node`);
+
+Sentry.init({
+  dsn: `https://c53d5d37f1f24e0a98b21606586abbf7@sentry.a1motion.com/11`,
+});
 
 const builds = new Bull(`builds`, {
   redis: {

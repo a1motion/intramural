@@ -1,6 +1,7 @@
 const got = require(`gh-got`);
 const Bull = require(`bull`);
 const debug = require(`debug`)(`intramural:worker:builds`);
+const Sentry = require(`@sentry/node`);
 const db = require(`../server/db`);
 const getToken = require(`./utils/getToken`);
 const getInstallToken = require(`./utils/getInstallToken`);
@@ -106,6 +107,6 @@ module.exports = async (job) => {
       })
     );
   } catch (e) {
-    console.log(e);
+    Sentry.captureException(e);
   }
 };

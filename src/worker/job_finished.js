@@ -1,3 +1,4 @@
+const Sentry = require(`@sentry/node`);
 const db = require(`../server/db`);
 
 const STATUSES = {
@@ -41,6 +42,6 @@ module.exports = async (job) => {
       );
     }
   } catch (e) {
-    console.log(e);
+    Sentry.captureException(e);
   }
 };
