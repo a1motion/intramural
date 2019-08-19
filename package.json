@@ -19,7 +19,7 @@
     "lint": "eslint --format=pretty '**/*.js'"
   },
   "devDependencies": {
-    "@hot-loader/react-dom": "^16.8.6",
+    "@hot-loader/react-dom": "^16.9.0",
     "ava": "^2.2.0",
     "babel-eslint": "^10.0.2",
     "customize-cra": "^0.4.1",
