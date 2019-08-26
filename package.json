@@ -21,7 +21,7 @@
   "devDependencies": {
     "@hot-loader/react-dom": "^16.8.6",
     "ava": "^2.2.0",
-    "babel-eslint": "^10.0.2",
+    "babel-eslint": "^10.0.3",
     "customize-cra": "^0.4.1",
     "eslint": "^5.12.1",
     "eslint-config-a1motion": "2.2.1",
