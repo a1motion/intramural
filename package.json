@@ -78,7 +78,7 @@
     "passport": "^0.4.0",
     "pg": "^7.12.1",
     "physical-cpu-count": "^2.0.0",
-    "probot": "^9.3.0"
+    "probot": "^9.5.3"
   },
   "ava": {
     "babel": {
