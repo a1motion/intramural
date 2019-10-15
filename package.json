@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "@a1motion/color-code": "^1.1.2",
-    "@sentry/node": "^5.6.1",
+    "@sentry/node": "^5.7.0",
     "aws-sdk": "^2.507.0",
     "bull": "^3.10.0",
     "connect-redis": "^3.4.2",
